@@ -1,0 +1,31 @@
+﻿@page
+@model NoKates.WebConsole.Pages.ServiceManagement.AddOrRemoveAppsModel
+
+<div>
+    <form>
+        <select class="custom-select"  title="App is required"   asp-for="AddApp">  
+            <option value="Select" selected disabled="disabled">(Choose App)</option>  
+            @foreach (var app in @Model.UnreferencedDirectories)  
+            {  
+                <option value="@app"> @app</option>  
+            }  
+        </select>  
+        <button onclick="this.form.submit()">Add Application</button>
+    </form>
+  
+    
+    <br/>
+    <br/>
+    <br/>
+    <form>
+        <select class="custom-select"  title="App is required"   asp-for="RemoveApp">  
+            <option value="Select" selected disabled="disabled">(Choose App)</option>  
+            @foreach (var app in @Model.Apps)  
+            {  
+                <option value="@app"> @app</option>  
+            }  
+        </select>  
+        <button onclick="this.form.submit()">Remove Application</button>
+    </form>
+   
+</div>

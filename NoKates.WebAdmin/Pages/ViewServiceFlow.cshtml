@@ -1,0 +1,58 @@
+@page
+@using NoKates.WebAdmin.Models
+@model NoKates.WebAdmin.Pages.ViewServiceFlowModel
+
+@functions {
+    private void RenderServiceNode(ServiceFlowNode node)
+    {
+
+
+        <li>
+            @if (node?.Request?.ResponseCode == -1)
+            {
+                <a href="#">
+                    <span>
+                        @node?.Request?.ServiceName <br/> 
+                        @node?.Request?.RequestType <br/> 
+                        @node?.Request?.RequestPath <br/> 
+                        Completed Query <br/>
+                        in @node?.Request?.ResponseTime ms
+                    </span>
+                </a>
+            
+            }
+            else
+            {
+                <a href="./RequestLogs?ServiceName=@node?.Request?.ServiceName&RequestTrackingId=@node?.Request?.RequestTrackingId">
+                    <span>
+                        @node?.Request?.ServiceName <br/> 
+                        @node?.Request?.RequestType <br/> 
+                        @node?.Request?.RequestPath <br/> 
+                        responded @node?.Request?.ResponseCode <br/>
+                        in @node?.Request?.ResponseTime ms
+                    </span>
+                </a>
+            }
+
+
+            @if (node?.SubRequests?.Any()??false)
+            {
+                <ul>
+                    @foreach (var subNode in node?.SubRequests ?? new List<ServiceFlowNode>())
+                    {
+                        RenderServiceNode(subNode);
+                    }
+                </ul>
+            }
+
+        </li>
+    }
+}
+
+<div class="tree">
+    <ul>
+            @{
+                RenderServiceNode(@Model.ServiceFlow);
+            }
+        </ul>
+</div>

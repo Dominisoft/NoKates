@@ -1,0 +1,53 @@
+﻿@page
+@model NoKates.WebConsole.Pages.ServiceManagement.EndpointStatusListModel
+@{
+}
+<div class="text-center">
+    Metrics for @Request.Query["ServiceName"] Service
+    <div class="text-center" style="display:inline;">
+    <h4>Endpoints</h4>
+    <div name="ColorKey" style="display:flex;background-color:black;">
+        <h6 style="color:@Model.Good; padding:5px;">Good</h6>
+        <h6 style="color:@Model.Degraded; padding:5px;">Slow Response</h6>
+        <h6 style="color:@Model.Issue; padding:5px;">High Errors</h6>
+        <h6 style="color:@Model.Offline; padding:5px;">Offline</h6>
+        <h6 style="color:@Model.NoTraffic; padding:5px;">NoTraffic</h6>
+    </div>
+    <div style="display:inline;">
+        @foreach (var name in Model.StatusPeriods.Keys)
+        {
+                <div style="border:solid; border-color:black; border-width:2px;">
+                    <div style="display:flex;">
+                        <div style="width:48%;">
+                            <div style="float:left; display:inline;">
+                                <div style="display:flex;">
+                                    <h2 style="padding-left:10px;">@name </h2>
+                                </div>
+                                <h4 style="color:green;padding-left:10px; float:left;">Online</h4><br />
+                            </div>
+
+                        </div>
+                        </div>
+                
+                    <div>
+                        <svg class="availability-time-line-graphic" id="uptime-component-74dvc0qj8zdp" style="padding-left:10px; align-content:center;" preserveAspectRatio="none" height="75" viewBox="0 0 1000 50">
+                            @foreach (var period in @Model.StatusPeriods[@name])
+                            {
+                                <rect height="@period.Height" width="@period.Width" x="@period.X" y="0" fill="@period.Color" data-html="true">
+                                    <title>
+                                        Index: @period.RequestMetric.Index
+Average Response Time: @period.RequestMetric.AverageResponseTime ms
+Request Count: @period.RequestMetric.RequestCount
+Error Count: @period.RequestMetric.Errors
+Error Rate: @period.ErrorPercent.ToString("F2") %
+@if (@period.RequestMetric.RequestCount > 0)
+{<p> Requests: @period.RequestMetric.FirstRequest - @period.RequestMetric.LastRequest</p>}
+                                    </title>
+                                </rect>
+                            }
+                        </svg>
+                    </div>      </div>       
+        }
+    </div>
+</div>
+</div>

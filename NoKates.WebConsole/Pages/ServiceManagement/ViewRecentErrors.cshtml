@@ -1,0 +1,72 @@
+﻿@page
+@model NoKates.WebConsole.Pages.ServiceManagement.ViewRecentErrorsModel
+@{
+}
+<div>
+    Recent Errors
+    <div>
+        <div style="overflow:scroll; height:700px">
+            @foreach(var entry in @Model.FilteredRequestMetrics)
+            {
+                <div id="@entry?.RequestTrackingId">
+                    <details class="deque-expander" @Model.GetExpanded(@entry?.RequestTrackingId)>
+
+                        <summary class="deque-expander-summary" tabindex="0" aria-expanded="false" role="button">
+                            <span class="toggle-indicator"></span>
+                            @entry?.RequestStart : @entry?.RequestType @entry?.RequestPath Returned @entry?.ResponseCode in @entry?.ResponseTime ms
+                        </summary>
+
+                        <div class="deque-expander-content">
+                            @if (entry?.ResponseCode > 0)
+                            {
+                                <a href="~/ServiceManagement/RequestFlow?requestId=@entry?.RequestTrackingId" title="View Request Flow" style="padding: 3px;">
+                                    <i class="fas fa-chart-line fa-3x"></i>
+                                </a>
+                            }
+                            <p><b>Request</b> <br/><code>@entry?.RequestJson</code> </p>
+                            <p><b>Response</b> <br/><code>@entry?.ResponseJson</code> </p>
+
+
+                        </div>
+                    </details>
+                </div>
+    
+
+            }
+        </div>
+        <div id="filters" style="height:100px">
+            <form style=" margin: 8px;
+                         border: 1px solid silver;
+                         padding: 8px;
+                         border-radius: 4px;" name="Filter" id="filterForm">
+                <label for="Source">Source</label>
+                <input id="Source" type="text" style="padding-left: 25px;"  onchange="this.form.submit()" asp-for="Source" value="@Model.Source"  />
+
+                <label for="responseCode">Response Code</label>
+                <input id="responseCode" type="number" onchange="this.form.submit()" asp-for="ResponseCode" value="@Model.ResponseCode" />
+
+                <label for="DateTimeStart">Start</label>
+                <input id="DateTimeStart" type="datetime"  onchange="this.form.submit()" asp-for="Start" value="@Model.Start"/>
+
+                <label for="DateTimeEnd">End</label>
+                <input id="DateTimeEnd" type="datetime"   onchange="this.form.submit()" asp-for="End" value="@Model.End"/>
+                <br />
+                <label for="TextContains">Contains</label>
+                <input id="TextContains" type="text"  onchange="this.form.submit()" asp-for="Contains" value="@Model.Contains" />
+
+                <label for="TextNotContains">Does not contain</label>
+                <input id="TextNotContains" type="text"   onchange="this.form.submit()" asp-for="NotContains" value="@Model.NotContains"/>
+            
+                <label for="RequestId">Request Id</label>
+                <input id="RequestId" type="text"   onchange="this.form.submit()" asp-for="RequestTrackingId" value="@Model.RequestTrackingId"/>
+                <br/>
+
+                <label for="ServiceName">Service Name</label>
+                <input id="ServiceName" type="text"   onchange="this.form.submit()" asp-for="ServiceName" value="@Model.ServiceName"/>
+
+            
+            </form>
+
+        </div>
+    </div>
+</div>

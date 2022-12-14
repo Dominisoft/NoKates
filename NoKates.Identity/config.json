@@ -1,0 +1,10 @@
+{
+  "ServiceAccountUsername": "ServiceLogin",
+  "ServiceAccountPassword": "ServicePassword",
+  "JwtKey": "my_secret_key_12345",
+  "JwtIssuer": "http://mysite.com",
+  "ConnectionString": "Data Source=Localhost;User ID=Microservice;Password=Password;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
+  "AuthorizationURL": "http://localhost/Identity/Authentication/ValidateAccess/{0}",
+  "DebugMode": "true"
+
+}

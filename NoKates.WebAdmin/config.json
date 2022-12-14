@@ -1,0 +1,19 @@
+{
+  "ConnectionString": "Data Source=Localhost;User ID=Microservice;Password=Password;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
+  "MetricsConnectionString": "Data Source=Localhost;User ID=Microservice;Password=Password;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
+  "AllowPassthroughOnUnknownEndpoints": "true",
+  "AuthenticationUrl": "http://localserver.wardkraft.com/Identity/Authentication",
+  "RoleEndpointUrl": "http://localserver.wardkraft.com/Identity/Role",
+  "EndpointGroupsUrl": "http://localserver.wardkraft.com/EndpointGroups",
+  "UserEndpointUrl": "http://localserver.wardkraft.com/Identity/User",
+  "RequestMetricUrl": "http://localserver.wardkraft.com/LogsAndMetrics/Metrics/Request/",
+  "RootEndpointUrl": "http://localserver.wardkraft.com",
+  "MetricsEndpointUrl": "http://localserver.wardkraft.com/LogsAndMetrics/Metrics/",
+  "ResponseTimeThreshold": 250,
+  "ErrorPercentThreshold": 5,
+  "LogDatabaseMetrics": "true",
+  "LogRequestMetrics": "true",
+  "LogRequestBody": "false",
+  "LogResponseBody": "false",
+  "DependencyEndpointUrl": "http://devappserver/management/api/Dependency/"
+}

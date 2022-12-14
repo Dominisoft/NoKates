@@ -1,0 +1,13 @@
+﻿@page
+@model NoKates.WebConsole.Pages.ServiceManagement.LogsModel
+@{
+}
+<div class="text-center">
+Logs for @Request.Query["ServiceName"]
+<div style="overflow:scroll; height:800px; text-align: left;">
+    @foreach(var entry in @Model.LogEntries.OrderByDescending(l => l.Date))
+    {
+        <p>@entry.Date - @entry.Message</p> <hr style="  border-top: 8px solid #bbb; border-radius: 3px;"/>
+    }
+</div>
+</div>

@@ -1,0 +1,15 @@
+@page
+@model NoKates.WebAdmin.Pages.LogsModel
+@{
+}
+<div class="text-center">
+    Logs for @Request.Query["ServiceName"] Service
+    <div style="overflow:scroll; height:800px;">
+            @foreach(var entry in @Model.LogEntries)
+    {
+        <p>@entry.Date - @entry.Message</p>
+    }
+    </div>
+
+
+</div>

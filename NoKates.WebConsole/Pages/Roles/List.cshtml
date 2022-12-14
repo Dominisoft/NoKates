@@ -1,0 +1,37 @@
+﻿@page
+@model NoKates.WebConsole.Pages.Roles.ListModel
+@{
+}
+
+<div class="text-center" style="overflow-Y:scroll; height:800px;">
+
+    <h1>Roles</h1>
+    <div>
+        <a href="./Edit">Add</a>
+    </div>
+
+    <table style="width: 100%">
+        <colgroup>
+            <col span="1" style="width: 30%;">
+            <col span="1" style="width: 70%;">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach(var role in @Model.Roles)
+        {
+            <tr>
+                <td><a href="./Edit?RoleId=@role.Id">@role.Name</a></td>
+                <td>@role.Description</td>
+            </tr> 
+        }
+   
+        <tr>
+        </tr>
+        </tbody>
+    </table>
+</div>

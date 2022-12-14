@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <Company>Dominisoft</Company>
+	  <Product>NoKates</Product>
+	  <Authors>Dominisoft</Authors>
+	  <Description>Common Library For NoKates Logs and Metrics Service</Description>
+	  <PackageProjectUrl></PackageProjectUrl>
+	  <PackageIcon></PackageIcon>
+	  <RepositoryUrl>https://github.com/Dominisoft/NoKates.Common</RepositoryUrl>
+	  <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	  <AssemblyVersion></AssemblyVersion>
+	  <FileVersion></FileVersion>
+	  <Version>1.2.4</Version>
+  </PropertyGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\NoKates.Common\NoKates.Common.csproj" />
+	</ItemGroup>
+
+</Project>
