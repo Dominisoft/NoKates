@@ -9,6 +9,7 @@ using NoKates.WebConsole.Helpers;
 using NoKates.WebConsole.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NoKates.Identity.Common.DataTransfer;
 
 namespace NoKates.WebConsole.Pages.Users
 {
@@ -16,7 +17,7 @@ namespace NoKates.WebConsole.Pages.Users
     {
         private readonly IUserClient _userClient;
 
-        public List<User> Users { get; set; }
+        public List<UserDto> Users { get; set; }
 
         public ListModel(IUserClient userClient)
         {

@@ -39,6 +39,7 @@ namespace NoKates.Identity
             }
 
             app.UseHttpsRedirection();
+            app.UseRouting();
             app.UseNoKates();
 
 

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NoKates.Common\NoKates.Common.csproj" />
+    <ProjectReference Include="..\NoKates.Identity.Common\NoKates.Identity.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

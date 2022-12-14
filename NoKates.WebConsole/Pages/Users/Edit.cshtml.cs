@@ -31,8 +31,8 @@ namespace NoKates.WebConsole.Pages.Users
             _adminClient = adminClient;
             _userClient = userClient;
             EndpointGroups = new Dictionary<string, List<string>>();
-            User = new User();
-            Roles = new List<Role>();
+            User = new UserDto();
+            Roles = new List<RoleDto>();
 
         }
         public override void LoadData(string token)
@@ -47,7 +47,7 @@ namespace NoKates.WebConsole.Pages.Users
             }
             else
             {
-                User = new User();
+                User = new UserDto();
             }
 
 
@@ -94,7 +94,7 @@ namespace NoKates.WebConsole.Pages.Users
     .Select(e => int.Parse(e.Substring(5)))
     .ToList();
             int.TryParse(Request.Query["UserId"], out var userId);
-            var updatedUser = new User
+            var updatedUser = new UserDto
             {
                 Id = userId,
                 Username = form["Input.Name"],

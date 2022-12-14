@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
+		<TargetFrameworks>netcoreapp3.1;Net6</TargetFrameworks>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Company>Dominisoft</Company>
 		<Product>NoKates</Product>
@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NoKates.Common\NoKates.Common.csproj" />
+    <ProjectReference Include="..\NoKates.Identity\NoKates.Identity.csproj" />
   </ItemGroup>
 
 </Project>

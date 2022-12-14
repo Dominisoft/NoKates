@@ -1,6 +1,8 @@
-﻿namespace NoKates.Identity.Common.DataTransfer
+﻿using NoKates.Common.Models;
+
+namespace NoKates.Identity.Common.DataTransfer
 {
-    public class RoleDto
+    public class RoleDto:Entity
     {
         public string Name { get; set; }
         public string Description { get; set; }

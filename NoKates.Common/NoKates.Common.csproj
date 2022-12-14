@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net472;net5;</TargetFrameworks>
+	  <TargetFrameworks>netcoreapp3.1;Net6;Net472</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Company>Dominisoft</Company>
     <Product>NoKates</Product>
@@ -32,6 +32,10 @@
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Properties\PublishProfiles\" />
 	</ItemGroup>
 
 </Project>

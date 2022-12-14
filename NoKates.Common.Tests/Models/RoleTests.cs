@@ -1,4 +1,5 @@
 using NoKates.Common.Models;
+using NoKates.Identity.Common.DataTransfer;
 using NUnit.Framework;
 
 namespace NoKates.Common.Tests.Models
@@ -20,7 +21,7 @@ namespace NoKates.Common.Tests.Models
 
             #region Act
 
-            var sut = new Role
+            var sut = new RoleDto
             {
                 Id = id,
                 Name = name,

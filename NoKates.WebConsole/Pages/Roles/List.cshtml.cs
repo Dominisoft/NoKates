@@ -10,6 +10,7 @@ using NoKates.WebConsole.Extensions;
 using NoKates.WebConsole.Helpers;
 using NoKates.WebConsole.Pages.Shared;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NoKates.Identity.Common.DataTransfer;
 
 namespace NoKates.WebConsole.Pages.Roles
 {
@@ -17,7 +18,7 @@ namespace NoKates.WebConsole.Pages.Roles
     {
         private readonly IRoleClient _roleClient;
 
-        public List<Role> Roles { get; set; }
+        public List<RoleDto> Roles { get; set; }
 
         public ListModel(IRoleClient roleClient)
         {

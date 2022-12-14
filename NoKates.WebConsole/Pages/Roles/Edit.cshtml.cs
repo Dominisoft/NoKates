@@ -11,6 +11,7 @@ using NoKates.WebConsole.Helpers;
 using NoKates.WebConsole.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NoKates.Identity.Common.DataTransfer;
 
 namespace NoKates.WebConsole.Pages.Roles
 {
@@ -18,14 +19,14 @@ namespace NoKates.WebConsole.Pages.Roles
     {
         private readonly IRoleClient _roleClient;
         private readonly INoKatesCoreClient _adminClient;
-        public Role Role { get; set; }
+        public RoleDto Role { get; set; }
         public Dictionary<string, List<string>> EndpointGroups { get; set; }
         public EditModel(IRoleClient roleClient, INoKatesCoreClient adminClient)
         {
             _roleClient = roleClient;
             _adminClient = adminClient;
             EndpointGroups = new Dictionary<string, List<string>>();
-            Role = new Role();
+            Role = new RoleDto();
         }
         public override void LoadData(string token)
         {
@@ -37,7 +38,7 @@ namespace NoKates.WebConsole.Pages.Roles
             }
             else
             {
-                Role = new Role();
+                Role = new RoleDto();
             }
 
             EndpointGroups = _adminClient.GetEndpointGroups(token);
@@ -64,7 +65,7 @@ namespace NoKates.WebConsole.Pages.Roles
                 .Select(e => e.Substring(19))
                 .ToList();
             int.TryParse(Request.Query["RoleId"], out var roleId);
-            var updatedRole = new Role
+            var updatedRole = new RoleDto
             {
                 Id = roleId,
                 Name = form["Input.Name"],

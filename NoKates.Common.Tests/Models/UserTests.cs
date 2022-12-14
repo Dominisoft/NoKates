@@ -1,4 +1,5 @@
 using NoKates.Common.Models;
+using NoKates.Identity.Common.DataTransfer;
 using NUnit.Framework;
 
 namespace NoKates.Common.Tests.Models
@@ -25,7 +26,7 @@ namespace NoKates.Common.Tests.Models
 
             #region Act
 
-            var sut = new User
+            var sut = new UserDto
             {
                 Id = id,
                 FirstName = firstName,
