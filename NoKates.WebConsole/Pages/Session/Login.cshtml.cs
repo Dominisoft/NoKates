@@ -1,14 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using NoKates.Common.Infrastructure.Extensions;
 using NoKates.Identity.Common.Clients;
 using NoKates.WebConsole.Extensions;
 using NoKates.WebConsole.Helpers;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace NoKates.WebConsole.Pages.Session

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NoKates.Common.Infrastructure.Controllers;
 using NoKates.Common.Infrastructure.Helpers;
-using NoKates.Common.Models;
 using NoKates.Identity.Models;
 
 namespace NoKates.Identity.Controllers

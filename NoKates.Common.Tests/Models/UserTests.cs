@@ -1,4 +1,3 @@
-using NoKates.Common.Models;
 using NoKates.Identity.Common.DataTransfer;
 using NUnit.Framework;
 

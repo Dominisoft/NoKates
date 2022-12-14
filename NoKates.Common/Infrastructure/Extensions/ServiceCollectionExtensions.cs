@@ -20,7 +20,7 @@ namespace NoKates.Common.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddNoKates(this IServiceCollection services, string configurationAppName = "Configuration", string configFile = null)
+        public static IServiceCollection AddNoKates(this IServiceCollection services, string configurationAppName = "NoKates.Configuration", string configFile = null)
         {
             SetupRepoDb();
 

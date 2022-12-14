@@ -1,14 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using NoKates.Common.Infrastructure.Client;
 using NoKates.Common.Infrastructure.Configuration;
 using NoKates.Common.Infrastructure.Extensions;
 using NoKates.Identity.Common.Clients;
@@ -31,7 +25,7 @@ namespace NoKates.WebConsole
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddNoKates()
+            services.AddNoKates(configurationAppName: "NoKates.Configuration")
                 .AddSingleton<IRoleClient>(new RoleClient(GlobalConfiguration.IdentityServiceUrl))
                 .AddSingleton<IUserClient>(new UserClient(GlobalConfiguration.IdentityServiceUrl))
                 .AddSingleton<IAuthenticationClient>(new AuthenticationClient(GlobalConfiguration.IdentityServiceUrl))

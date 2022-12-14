@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using NoKates.Common.Infrastructure.Extensions;
 using NoKates.Common.Infrastructure.Helpers;
-using NoKates.WebConsole.Application;
 
 namespace NoKates.WebConsole.Clients
 {

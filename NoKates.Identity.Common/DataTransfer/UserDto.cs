@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NoKates.Common.Models;
+﻿using NoKates.Common.Models;
 
 namespace NoKates.Identity.Common.DataTransfer
 {

@@ -2,8 +2,6 @@
 using NoKates.Common.Infrastructure.Extensions;
 using NoKates.Common.Infrastructure.Helpers;
 using NoKates.Common.Models;
-using NoKates.WebConsole.Extensions;
-using Microsoft.Extensions.Primitives;
 
 namespace NoKates.WebConsole.Clients
 {

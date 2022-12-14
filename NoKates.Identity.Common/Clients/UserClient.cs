@@ -1,6 +1,5 @@
 using NoKates.Common.Infrastructure.Client;
 using NoKates.Common.Infrastructure.Helpers;
-using NoKates.Common.Models;
 using NoKates.Identity.Common.DataTransfer;
 
 namespace NoKates.Identity.Common.Clients

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using NoKates.WebConsole.Application;
 using NoKates.WebConsole.Extensions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace NoKates.WebConsole.Controllers

@@ -1,15 +1,9 @@
 using System;
 using System.Collections.Generic;
 using NoKates.Common.Infrastructure.Extensions;
-using NoKates.Common.Infrastructure.Helpers;
 using NoKates.Common.Models;
-using NoKates.LogsAndMetrics.Common;
-using NoKates.LogsAndMetrics.Common.DataTransfer;
 using NoKates.WebConsole.Clients;
-using NoKates.WebConsole.Helpers;
 using NoKates.WebConsole.Pages.Shared;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace NoKates.WebConsole.Pages.ServiceManagement
 {

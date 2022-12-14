@@ -9,7 +9,6 @@ using NoKates.Common.Infrastructure.Configuration;
 using NoKates.Common.Infrastructure.CustomExceptions;
 using NoKates.Common.Infrastructure.Extensions;
 using NoKates.Common.Infrastructure.Helpers;
-using NoKates.Common.Models;
 using NoKates.Identity.Models;
 
 namespace NoKates.Identity.Services

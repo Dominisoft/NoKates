@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using NoKates.Common.Models;
 
 namespace NoKates.Identity.Models
 {
