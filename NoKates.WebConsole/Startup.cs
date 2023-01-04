@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NoKates.Common.Infrastructure.Configuration;
 using NoKates.Common.Infrastructure.Extensions;
+using NoKates.Common.Infrastructure.Helpers;
 using NoKates.Identity.Common.Clients;
 using NoKates.LogsAndMetrics.Common;
 using NoKates.WebConsole.Application;
@@ -32,7 +33,7 @@ namespace NoKates.WebConsole
                 .AddSingleton<INoKatesCoreClient>(new NoKatesCoreClient(GlobalConfiguration.RootEndpointUrl))
                 .AddSingleton<IMetricsClient>(new MetricsClient(GlobalConfiguration.LogsAndMetricsServiceUrl))
                 .AddSingleton<IWebHostManagementService>(new WebHostManagementService())
-                .AddSingleton<IWebHostManagementClient>(new WebHostManagementClient(GlobalConfiguration.BaseUrl+"/Management"))
+                .AddSingleton<IWebHostManagementClient>(new WebHostManagementClient(GlobalConfiguration.BaseUrl+"/"+AppHelper.GetAppName()))
                 ;
             services.AddRazorPages();
         }

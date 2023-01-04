@@ -45,15 +45,15 @@ namespace NoKates.Common.Infrastructure.Configuration
 
         private static string SetToken()
         {
-
-            var authClient = new AuthenticationClient(Values["AuthenticationUrl"]);
+            var authUrl = Values["AuthenticationUrl"];
+            var authClient = new AuthenticationClient(authUrl);
 
             var token = authClient.GetToken(Values["ServiceUsername"], Values["ServicePassword"]);
             _token = token;
 
             if (_token != null) return _token;
 
-            StatusValues.Log("Unable to get token");
+            StatusValues.Log($"Unable to get token from {authUrl}");
             return "No_Token";
         }
 

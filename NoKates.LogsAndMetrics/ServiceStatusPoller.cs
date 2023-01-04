@@ -1,6 +1,8 @@
 
+using System;
 using System.Timers;
 using NoKates.Common.Infrastructure.Client;
+using NoKates.Common.Infrastructure.Configuration;
 using NoKates.Common.Infrastructure.Helpers;
 
 namespace NoKates.LogsAndMetrics
@@ -17,7 +19,8 @@ namespace NoKates.LogsAndMetrics
         {
             _username = username;
             _password = password;
-            var authenticationUrl = $"{rootUrl}/Identity/Authentication";
+            var hasUrl = ConfigurationValues.TryGetValue(out var authenticationUrl, "AuthenticationUrl");
+            if (!hasUrl) throw new Exception("Unable to find \"AuthenticationUrl\" Configuration Value");
             _servicesStatusUrl = rootUrl;
             _authenticationClient = new AuthenticationClient(authenticationUrl);
             _timer = new Timer(60000 * interval);

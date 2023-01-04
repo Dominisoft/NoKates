@@ -61,7 +61,7 @@ namespace NoKates.WebConsole.Pages.ServiceManagement
             catch (Exception ex)
             {
                 throw new RequestException(200,
-                    $"Unable to Generate Charts for Service Statuses, Check service host\r\n\r\nError : {ex.Message}");
+                    $"Unable to Generate Charts for Service Statuses, Check service host\r\n\r\nError : {ex.Message} \r\n{ex.StackTrace}");
             }
 
         }

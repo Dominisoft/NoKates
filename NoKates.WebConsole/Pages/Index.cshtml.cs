@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using NoKates.WebConsole.Pages.Shared;
 
 namespace NoKates.WebConsole.Pages
 {
-    public class IndexModel : PageModel
+    public class IndexModel : AuthenticatedPage
     {
         private readonly ILogger<IndexModel> _logger;
         public string dataUrl { get; set; }
@@ -13,9 +14,10 @@ namespace NoKates.WebConsole.Pages
             dataUrl = "1234567";
         }
 
-        public void OnGet()
-        {
 
+        public override void LoadData(string token)
+        {
+            
         }
     }
 }

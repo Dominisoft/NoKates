@@ -55,6 +55,7 @@ namespace NoKates.WebConsole.Application
             newPool.ProcessModel.IdentityType = ProcessModelIdentityType.LocalSystem;
             newPool.ProcessModel.IdleTimeoutAction = IdleTimeoutAction.Suspend;
             serverManager.CommitChanges();
+            
             return true;
         }
 
