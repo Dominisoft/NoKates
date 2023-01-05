@@ -27,7 +27,7 @@ namespace NoKates.Identity.Services
             var userRepo = RepositoryHelper.CreateRepository<User>();
             var roleRepo = RepositoryHelper.CreateRepository<Role>();
             var name = username?.ToNormalFormat()??throw new AuthorizationException("username Required");
-            var user = userRepo.GetAll().FirstOrDefault(u => u.Username?.Normalize() == name|| u.Email?.Normalize() == name);
+            var user = userRepo.GetAll().FirstOrDefault(u => u.Username?.ToNormalFormat() == name|| u.Email?.ToNormalFormat() == name);
             if (user == null)
             {
                 throw new AuthorizationException("Incorrect Username or Password");

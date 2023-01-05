@@ -19,8 +19,8 @@ namespace NoKates.LogsAndMetrics
         {
             _username = username;
             _password = password;
-            var hasUrl = ConfigurationValues.TryGetValue(out var authenticationUrl, "AuthenticationUrl");
-            if (!hasUrl) throw new Exception("Unable to find \"AuthenticationUrl\" Configuration Value");
+            var hasUrl = ConfigurationValues.TryGetValue(out var authenticationUrl, "IdentityServiceUrl");
+            if (!hasUrl) throw new Exception("Unable to find \"IdentityServiceUrl\" Configuration Value");
             _servicesStatusUrl = rootUrl;
             _authenticationClient = new AuthenticationClient(authenticationUrl);
             _timer = new Timer(60000 * interval);

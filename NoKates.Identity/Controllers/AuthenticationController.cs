@@ -30,6 +30,7 @@ namespace NoKates.Identity.Controllers
         public ActionResult Logout()
         {
             var key = Request.Headers["AuthorizationKey"];
+            Response.Headers.Clear();
             return Ok(new { LogOut = true });
         }
     }
