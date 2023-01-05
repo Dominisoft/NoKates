@@ -59,8 +59,8 @@ namespace NoKates.Common.Infrastructure.Extensions
         }
         private static void SetupRepoDb()
         {
-            SqlServerBootstrap.Initialize();
-
+            //SqlServerBootstrap.Initialize();
+            GlobalConfiguration.Setup().UseSqlServer();
             var dbSetting = new SqlServerDbSetting();
 
             DbSettingMapper
@@ -72,9 +72,8 @@ namespace NoKates.Common.Infrastructure.Extensions
         }
         private static void SetupJwtServices(this IServiceCollection services)
         {
-            //TODO: This should come from config
-            var key = "my_secret_key_12345"; //this should be same which is used while creating token    
-            var issuer = "http://mysite.com";  //this should be same which is used while creating token
+            var key = ConfigurationValues.Values["JwtKey"];//this should be same which is used while creating token    
+            var issuer = ConfigurationValues.Values["JwtIssuer"];  //this should be same which is used while creating token
 
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims

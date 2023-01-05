@@ -11,5 +11,6 @@ namespace NoKates.WebConsole
         public static int ErrorPercentThreshold { get; set; } = 5;
         public static string BaseUrl => ConfigurationValues.Values["BaseUrl"];
         public static string HostSiteName => ConfigurationValues.Values["HostSiteName"];
+        public static string ConfigurationServiceUrl => ConfigurationValues.Values["ConfigurationServiceUrl"];
     }
 }

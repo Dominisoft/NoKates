@@ -34,6 +34,7 @@ namespace NoKates.WebConsole
                 .AddSingleton<IMetricsClient>(new MetricsClient(GlobalConfiguration.LogsAndMetricsServiceUrl))
                 .AddSingleton<IWebHostManagementService>(new WebHostManagementService())
                 .AddSingleton<IWebHostManagementClient>(new WebHostManagementClient(GlobalConfiguration.BaseUrl+"/"+AppHelper.GetAppName()))
+                .AddSingleton<IConfigurationClient>(new ConfigurationClient(GlobalConfiguration.ConfigurationServiceUrl))
                 ;
             services.AddRazorPages();
         }

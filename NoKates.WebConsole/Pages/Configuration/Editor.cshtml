@@ -1,0 +1,200 @@
+﻿@page
+@model NoKates.WebConsole.Pages.Configuration.EditorModel
+
+
+
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+
+    .grid2x2 {
+        min-height: 800px;
+        min-width: 1000px;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+    }
+
+        .grid2x2 > div {
+            display: flex;
+            flex-basis: calc(50% - 40px);
+            justify-content: center;
+            flex-direction: column;
+        }
+
+            .grid2x2 > div > div {
+                display: flex;
+                justify-content: center;
+                flex-direction: row;
+            }
+
+    .dropDownList {
+        margin-left: 45px;
+    }
+
+    .box {
+        margin: 20px;
+        overflow: scroll;
+    }
+
+    .box1 {
+        background-color: red;
+    }
+
+    .box2 {
+        background-color: orange;
+    }
+
+    .box3 {
+        background-color: blue;
+    }
+
+    .box4 {
+        background-color: grey;
+    }
+
+    .box_header {
+        float: left;
+    }
+
+    .editor {
+        height: 100%;
+        white-space: pre;
+        overflow-wrap: normal;
+        overflow-x: scroll;
+    }
+
+    .saveIcon {
+        color: green;
+        padding-left: 50px;
+        padding-top: 10px;
+        float: right;
+    }
+</style>
+<div class="grid2x2">
+    <div class="box box1">
+
+        <div id="box_1_header" class="box_header">
+            <h1>Template</h1>
+            <h2 class="saveIcon" title="Save" onclick="saveTemplate()">✓</h2>
+            <select 
+                asp-items="Model.FileNames"  
+                asp-for="@Model.selectedFileName"
+                id="templateName" 
+                onchange="onSelectionChanged(this.value)" 
+                class="dropDownList"></select>
+        </div>
+
+        <textarea class="editor" id="templateEditor">@Model.templateJson</textarea>
+    </div>
+
+    <div class="box box2">
+
+        <div id="box_2_header" class="box_header">
+            <h1 title="Master values to replace variables in service config files">Master</h1>
+            <h2 class="saveIcon" title="Save" onclick="saveMaster()">✓</h2>
+
+        </div>
+
+        <textarea class="editor" id ="masterEditor">@Model.masterJson</textarea>
+    </div>
+
+    <div class="box box3">
+        <div id="box_3_header" class="box_header">
+            <h1 title="Default values to be included in config files">Defaults</h1>
+            <h2 class="saveIcon" title="Save" onclick="saveDefaults()">✓</h2>
+
+        </div>
+
+        <textarea class="editor" id="defaultsEditor">@Model.defaultJson</textarea>
+    </div>
+
+    <div class="box box4">
+        <div id="box_4_header" class="box_header">
+            <h1>Preview</h1>
+
+        </div>
+
+        <textarea class="editor" readonly="readonly">@Model.configJson</textarea>
+    </div>
+</div>
+
+<script>
+    function saveTemplate() {
+        let editor = document.getElementById('templateEditor');
+        let selector = document.getElementById('templateName');
+        
+        var authToken = Cookies.get("AuthorizationToken");
+        var formattedTemplate = editor.value.replaceAll('\n', ' ')
+
+        var data = { innerString: formattedTemplate };
+        console.log(data);
+
+        fetch("http://Localhost/Nokates.Configuration/"+selector.value, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+            body: JSON.stringify(data)
+        }).then(res => {
+            console.log("Request complete! response:", res);
+        });
+        alert("Saved template");
+        location.reload();
+
+
+    }
+    function saveDefaults() {
+        let editor = document.getElementById('defaultsEditor');
+
+        var authToken = Cookies.get("AuthorizationToken");
+        var formattedTemplate = editor.value.replaceAll('\n', ' ')
+
+        var data = { innerString: formattedTemplate };
+        console.log(data);
+
+        fetch("http://Localhost/Nokates.Configuration/defaults", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+            body: JSON.stringify(data)
+        }).then(res => {
+            console.log("Request complete! response:", res);
+        });
+        alert("Saved Default");
+        location.reload();
+    }
+    function saveMaster() {
+let editor = document.getElementById('masterEditor');
+        
+        var authToken = Cookies.get("AuthorizationToken");
+        var formattedTemplate = editor.value.replaceAll('\n', ' ')
+
+        var data = { innerString: formattedTemplate };
+        console.log(data);
+
+        fetch("http://Localhost/Nokates.Configuration/Master", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+            body: JSON.stringify(data)
+        }).then(res => {
+            console.log("Request complete! response:", res);
+        });
+        alert("Saved Master");
+        location.reload();
+    }
+    function onSelectionChanged(name) {
+        window.location.href = "?templateName=" + name;
+
+    }
+    function getCookie(name) {
+        let cookie = {};
+        document.cookie.split(';').forEach(function (el) {
+            let [k, v] = el.split('=');
+            cookie[k.trim()] = v;
+        })
+        return cookie[name];
+    }
+
+
+</script>
+
