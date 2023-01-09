@@ -58,9 +58,12 @@ namespace NoKates.Common.Infrastructure.Configuration
         }
 
      
-        internal static void LoadConfig(string configServiceName)
+        internal static void LoadConfig()
         {
-            var configUri = $"{AppHelper.GetRootUri()}{configServiceName}/{AppHelper.GetAppName()}";
+            var coreClient = new NoKatesCoreClient("http://LocalServiceHost");
+            var response = coreClient.GetStartupConfig();
+            var configurationUrl = response.Object["ConfigurationServiceUrl"].ToString();
+            var configUri = $"{configurationUrl}/{AppHelper.GetAppName()}";
             LoadConfigFromUrl(configUri);
         }
         private static void GetConfig(string url)

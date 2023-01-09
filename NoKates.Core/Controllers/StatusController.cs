@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using NoKates.Core.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using NoKates.Common.Infrastructure.Attributes;
-using NoKates.Common.Infrastructure.Configuration;
 using NoKates.Common.Infrastructure.Helpers;
 using NoKates.Common.Models;
 
@@ -40,7 +38,7 @@ namespace NoKates.Core.Controllers
         [NoAuth]
         public FileContentResult GetFavIcon()
         {
-             ConfigurationValues.Values.TryGetValue("IconPath", out var path);
+             var path = GlobalConfig.IconPath;
              return new FileContentResult(System.IO.File.ReadAllBytes(path ?? "./favicon.ico"), "image/x-icon");
         }
 

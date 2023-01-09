@@ -6,5 +6,7 @@
   "ServicePassword": "ServicePassword",
   "JwtKey": "my_secret_key_12345",
   "JwtIssuer": "http://mysite.com",
-  "IconPath": "./Icon.png"
+  "IconPath": "./Icon.png",
+  "StartupConfig": "./Startup.json"
+
 }

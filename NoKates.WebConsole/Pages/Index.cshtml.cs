@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using NoKates.WebConsole.Pages.Shared;
 
 namespace NoKates.WebConsole.Pages

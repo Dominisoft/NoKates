@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-using System.IO;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using NoKates.Common.Infrastructure.Attributes;
 using NoKates.Configuration.Application;
 

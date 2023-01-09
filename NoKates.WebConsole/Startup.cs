@@ -26,7 +26,7 @@ namespace NoKates.WebConsole
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddNoKates(configurationAppName: "NoKates.Configuration")
+            services.AddNoKates()
                 .AddSingleton<IRoleClient>(new RoleClient(GlobalConfiguration.IdentityServiceUrl))
                 .AddSingleton<IUserClient>(new UserClient(GlobalConfiguration.IdentityServiceUrl))
                 .AddSingleton<IAuthenticationClient>(new AuthenticationClient(GlobalConfiguration.IdentityServiceUrl))
