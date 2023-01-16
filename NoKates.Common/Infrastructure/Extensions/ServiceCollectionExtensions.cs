@@ -1,6 +1,7 @@
 using System;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Text;
 using NoKates.Common.Infrastructure.Configuration;
 using NoKates.Common.Infrastructure.Controllers;
@@ -22,6 +23,7 @@ namespace NoKates.Common.Infrastructure.Extensions
     {
         public static IServiceCollection AddNoKates(this IServiceCollection services,  string configFile = null)
         {
+
             SetupRepoDb();
 
             if (string.IsNullOrWhiteSpace(configFile))
