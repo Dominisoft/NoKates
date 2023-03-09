@@ -1,6 +1,12 @@
 using NoKates.Common.Infrastructure.Configuration;
 using NoKates.Common.Infrastructure.Middleware;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Identity.Client;
+using System.Threading.Tasks;
+using System;
+using Microsoft.AspNetCore.Http.Extensions;
+using Prometheus;
+using Metrics = Prometheus.Metrics;
 
 namespace NoKates.Common.Infrastructure.Extensions
 {
@@ -21,6 +27,17 @@ namespace NoKates.Common.Infrastructure.Extensions
             return app;
         }
 
+        private static IApplicationBuilder UsePrometheus(this IApplicationBuilder app)
+        {
+
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapMetrics();
+            });
+
+            return app;
+        }
         
     }
 }
