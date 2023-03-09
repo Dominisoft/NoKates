@@ -26,6 +26,12 @@ namespace NoKates.Core.Controllers
 
             return results.ToArray();
         }
+
+        [HttpGet("Services")]
+        public List<string> GetServices()
+        {
+            return ServiceStatusHelper.GetServiceNames();
+        }
         [HttpGet("EndpointGroups")]
         [EndpointGroup("System.Admin")]
         public ActionResult<Dictionary<string, List<string>>> GetEndpointGroups()

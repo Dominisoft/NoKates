@@ -99,5 +99,11 @@ namespace NoKates.Core.Infrastructure
             var rootName = AppHelper.GetAppName();
             return apps.Where(app => app.ApplicationPoolName !=rootName).Select(app => app.ApplicationPoolName).ToArray();
         }
+
+        public static List<string> GetServiceNames()
+        {
+            var apps = AppHelper.GetApps();
+            return apps.Select(a => a.ApplicationPoolName).ToList();
+        }
     }
 }
