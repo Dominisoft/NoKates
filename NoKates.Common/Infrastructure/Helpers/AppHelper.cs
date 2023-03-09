@@ -16,8 +16,13 @@ namespace NoKates.Common.Infrastructure.Helpers
     {
         private const string UnknownName = "Unknown Service";
         private static string _appName;
+
+        private static string AppPoolName =>
+            System.Environment.GetEnvironmentVariable("APP_POOL_ID", EnvironmentVariableTarget.Process);
         public static string GetAppName()
         {
+            if (!string.IsNullOrWhiteSpace(AppPoolName))
+                return AppPoolName;
             if (!string.IsNullOrEmpty(_appName))
                 return _appName;
             var apps = GetApps();
@@ -77,7 +82,7 @@ namespace NoKates.Common.Infrastructure.Helpers
         internal static VersionDetails GetVersionDetails()
         {
 
-            var strExeFilePath = Assembly.GetExecutingAssembly().Location;
+            var strExeFilePath = Assembly.GetEntryAssembly()?.Location??Assembly.GetCallingAssembly().Location;
 
             var strWorkPath = Path.GetDirectoryName(strExeFilePath);
             if (File.Exists($"{strWorkPath}\\Version.json"))

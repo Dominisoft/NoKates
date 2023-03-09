@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NoKates.Common.Infrastructure.Configuration;
 using NoKates.Common.Infrastructure.Extensions;
+using NoKates.Common.Infrastructure.Helpers;
 using NoKates.Identity.Common.Clients;
 using NoKates.LogsAndMetrics.Common;
 using NoKates.WebConsole.Application;
@@ -25,14 +27,17 @@ namespace NoKates.WebConsole
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddNoKates(configurationAppName: "NoKates.Configuration")
+            var nam = Assembly.GetEntryAssembly()?.GetName();
+            var version = nam.Version;
+            services.AddNoKates()
                 .AddSingleton<IRoleClient>(new RoleClient(GlobalConfiguration.IdentityServiceUrl))
                 .AddSingleton<IUserClient>(new UserClient(GlobalConfiguration.IdentityServiceUrl))
                 .AddSingleton<IAuthenticationClient>(new AuthenticationClient(GlobalConfiguration.IdentityServiceUrl))
                 .AddSingleton<INoKatesCoreClient>(new NoKatesCoreClient(GlobalConfiguration.RootEndpointUrl))
                 .AddSingleton<IMetricsClient>(new MetricsClient(GlobalConfiguration.LogsAndMetricsServiceUrl))
                 .AddSingleton<IWebHostManagementService>(new WebHostManagementService())
-                .AddSingleton<IWebHostManagementClient>(new WebHostManagementClient(GlobalConfiguration.BaseUrl+"/Management"))
+                .AddSingleton<IWebHostManagementClient>(new WebHostManagementClient(GlobalConfiguration.BaseUrl+"/"+AppHelper.GetAppName()))
+                .AddSingleton<IConfigurationClient>(new ConfigurationClient(GlobalConfiguration.ConfigurationServiceUrl))
                 ;
             services.AddRazorPages();
         }

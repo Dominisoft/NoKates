@@ -28,7 +28,7 @@ namespace NoKates.Core.Infrastructure
                 {
                     Date = DateTime.Now,
                     Message = $"Got Token: {token?.Split('.').Length==3}",
-                    Source = "NoKates.Core"
+                    Source = AppHelper.GetAppName()
                 });
                 
                 var parts = path.Split("/").ToList();

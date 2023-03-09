@@ -15,7 +15,7 @@ namespace NoKates.Common.Tests.Models
             const string name = "test";
             var startTime = DateTime.Now;
             const bool isOnline = true;
-            const string uri = "localhost/app/path";
+            const string uri = "LocalServiceHost/app/path";
 
             const string version = "V1.0.0";
             var buildDate = DateTime.Now.AddDays(-1);

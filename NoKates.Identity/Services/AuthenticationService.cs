@@ -9,6 +9,7 @@ using NoKates.Common.Infrastructure.Configuration;
 using NoKates.Common.Infrastructure.CustomExceptions;
 using NoKates.Common.Infrastructure.Extensions;
 using NoKates.Common.Infrastructure.Helpers;
+using NoKates.Identity.Extensions;
 using NoKates.Identity.Models;
 
 namespace NoKates.Identity.Services
@@ -25,8 +26,8 @@ namespace NoKates.Identity.Services
 
             var userRepo = RepositoryHelper.CreateRepository<User>();
             var roleRepo = RepositoryHelper.CreateRepository<Role>();
-
-            var user = userRepo.GetAll().FirstOrDefault(u => u.Username?.Trim() == username.Trim() || u.Email?.Trim() == username.Trim());
+            var name = username?.ToNormalFormat()??throw new AuthorizationException("username Required");
+            var user = userRepo.GetAll().FirstOrDefault(u => u.Username?.ToNormalFormat() == name|| u.Email?.ToNormalFormat() == name);
             if (user == null)
             {
                 throw new AuthorizationException("Incorrect Username or Password");
@@ -85,8 +86,8 @@ namespace NoKates.Identity.Services
                             permClaims,
                             expires: DateTime.Now.AddDays(expirationDays),
                             signingCredentials: credentials);
-            var jwt_token = new JwtSecurityTokenHandler().WriteToken(token);
-            return jwt_token;
+            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+            return jwtToken;
         }
     }
 }

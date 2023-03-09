@@ -1,6 +1,7 @@
 using System;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Text;
 using NoKates.Common.Infrastructure.Configuration;
 using NoKates.Common.Infrastructure.Controllers;
@@ -20,13 +21,14 @@ namespace NoKates.Common.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddNoKates(this IServiceCollection services, string configurationAppName = "NoKates.Configuration", string configFile = null)
+        public static IServiceCollection AddNoKates(this IServiceCollection services,  string configFile = null)
         {
+
             SetupRepoDb();
 
             if (string.IsNullOrWhiteSpace(configFile))
             {
-                ConfigurationValues.LoadConfig(configurationAppName);
+                ConfigurationValues.LoadConfig();
             }
             else
             {
@@ -59,8 +61,8 @@ namespace NoKates.Common.Infrastructure.Extensions
         }
         private static void SetupRepoDb()
         {
-            SqlServerBootstrap.Initialize();
-
+            //SqlServerBootstrap.Initialize();
+            GlobalConfiguration.Setup().UseSqlServer();
             var dbSetting = new SqlServerDbSetting();
 
             DbSettingMapper
@@ -72,9 +74,8 @@ namespace NoKates.Common.Infrastructure.Extensions
         }
         private static void SetupJwtServices(this IServiceCollection services)
         {
-            //TODO: This should come from config
-            var key = "my_secret_key_12345"; //this should be same which is used while creating token    
-            var issuer = "http://mysite.com";  //this should be same which is used while creating token
+            var key = ConfigurationValues.Values["JwtKey"];//this should be same which is used while creating token    
+            var issuer = ConfigurationValues.Values["JwtIssuer"];  //this should be same which is used while creating token
 
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims

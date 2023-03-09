@@ -49,12 +49,13 @@ namespace NoKates.WebConsole.Application
         {
             using ServerManager serverManager = new ServerManager();
             ApplicationPool newPool = serverManager.ApplicationPools.Add(appPoolName);
-            newPool.ManagedRuntimeVersion = "No Managed Code";
+            newPool.ManagedRuntimeVersion = null;
             newPool.Enable32BitAppOnWin64 = true;
             newPool.ManagedPipelineMode = ManagedPipelineMode.Integrated;
             newPool.ProcessModel.IdentityType = ProcessModelIdentityType.LocalSystem;
             newPool.ProcessModel.IdleTimeoutAction = IdleTimeoutAction.Suspend;
             serverManager.CommitChanges();
+            
             return true;
         }
 

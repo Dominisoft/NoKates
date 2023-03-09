@@ -45,22 +45,25 @@ namespace NoKates.Common.Infrastructure.Configuration
 
         private static string SetToken()
         {
-
-            var authClient = new AuthenticationClient(Values["AuthenticationUrl"]);
+            var authUrl = Values["AuthenticationUrl"];
+            var authClient = new AuthenticationClient(authUrl);
 
             var token = authClient.GetToken(Values["ServiceUsername"], Values["ServicePassword"]);
             _token = token;
 
             if (_token != null) return _token;
 
-            StatusValues.Log("Unable to get token");
+            StatusValues.Log($"Unable to get token from {authUrl}");
             return "No_Token";
         }
 
      
-        internal static void LoadConfig(string configServiceName)
+        internal static void LoadConfig()
         {
-            var configUri = $"{AppHelper.GetRootUri()}{configServiceName}/{AppHelper.GetAppName()}";
+            var coreClient = new NoKatesCoreClient("http://LocalServiceHost");
+            var response = coreClient.GetStartupConfig();
+            var configurationUrl = response.Object["ConfigurationServiceUrl"].ToString();
+            var configUri = $"{configurationUrl}/{AppHelper.GetAppName()}";
             LoadConfigFromUrl(configUri);
         }
         private static void GetConfig(string url)

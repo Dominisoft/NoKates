@@ -31,7 +31,7 @@ namespace NoKates.LogsAndMetrics
             int.TryParse(ConfigurationValues.Values["PollInterval"], out var pollInterval);
             var username = ConfigurationValues.Values["ServiceAccountUsername"];
             var password= ConfigurationValues.Values["ServiceAccountPassword"];
-            var rootUrl= ConfigurationValues.Values["RootUrl"];
+            var rootUrl= ConfigurationValues.Values["BaseUrl"];
             var poll = new ServiceStatusPoller(pollInterval, username, password, rootUrl);
             services.AddSingleton(poll);
         }

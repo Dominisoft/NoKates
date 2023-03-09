@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NoKates.Common.Infrastructure.Configuration;
 using NoKates.Common.Infrastructure.Extensions;
+using NoKates.Configuration.Application;
 
 namespace NoKates.Configuration
 {
@@ -19,11 +20,14 @@ namespace NoKates.Configuration
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        private string ConfigurationDirectory => ConfigurationValues.Values["ConfigurationDirectory"];
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddNoKates(configFile:"./config.json");
-            ConfigurationTransformHelper.LoadMasterConfig($"{ConfigurationValues.Values["ConfigurationDirectory"]}\\{ConfigurationValues.Values["MasterTransformsTemplate"]}");
+            services.AddNoKates(configFile: "./config.json");
 
+            services.AddSingleton<IConfigReader>(new ConfigReader(ConfigurationDirectory));
+            services.AddTransient<IConfigurationService, ConfigurationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

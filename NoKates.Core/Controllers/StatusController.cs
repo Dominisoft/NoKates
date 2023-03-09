@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using NoKates.Core.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using NoKates.Common.Infrastructure.Attributes;
-using NoKates.Common.Infrastructure.Configuration;
 using NoKates.Common.Infrastructure.Helpers;
 using NoKates.Common.Models;
 
@@ -13,7 +12,7 @@ namespace NoKates.Core.Controllers
     public class StatusController : ControllerBase
     {
         [HttpGet("")]
-        [EndpointGroup("System Admin")]
+        [EndpointGroup("System.Admin")]
         public ActionResult<ServiceStatus[]> GetAllServiceStatuses()
         {
             var root = AppHelper.GetRootUri();
@@ -28,17 +27,18 @@ namespace NoKates.Core.Controllers
             return results.ToArray();
         }
         [HttpGet("EndpointGroups")]
-        [EndpointGroup("System Admin")]
+        [EndpointGroup("System.Admin")]
         public ActionResult<Dictionary<string, List<string>>> GetEndpointGroups()
         {
             return ServiceStatusHelper.GetGroups($"{Request.Scheme}://{Request.Host.Value}/");
         }
 
         [HttpGet("favicon.ico")]
+        [EndpointGroup("Public")]
         [NoAuth]
         public FileContentResult GetFavIcon()
         {
-             ConfigurationValues.Values.TryGetValue("IconPath", out var path);
+             var path = GlobalConfig.IconPath;
              return new FileContentResult(System.IO.File.ReadAllBytes(path ?? "./favicon.ico"), "image/x-icon");
         }
 
