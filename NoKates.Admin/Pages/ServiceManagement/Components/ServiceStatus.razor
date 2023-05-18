@@ -3,10 +3,10 @@
 @using NoKates.Common.Infrastructure.Helpers
 @using NoKates.LogsAndMetrics.Common
 @using NoKates.LogsAndMetrics.Common.DataTransfer
-@using NoKates.WebConsole
-@using NoKates.WebConsole.Models
+@using RepoDb
+@using NoKates.Admin.Data.ServiceManagement
+@using GlobalConfiguration = NoKates.Admin.GlobalConfiguration
 @inject IMetricsClient MetricsClient;
-@page "/NA"
 
 <div>
     if (@Status == null){

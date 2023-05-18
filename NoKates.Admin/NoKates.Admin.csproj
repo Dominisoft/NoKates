@@ -7,12 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Pages\ServiceManagement\Components\ServiceStatus.razor" />
+    <None Include="Pages\ServiceManagement\StatusList.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Moq" Version="4.18.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NoKates.Common\NoKates.Common.csproj" />
-    <ProjectReference Include="..\NoKates.WebConsole\NoKates.WebConsole.csproj" />
+    <ProjectReference Include="..\NoKates.LogsAndMetrics.Common\NoKates.LogsAndMetrics.Common.csproj" />
   </ItemGroup>
 
 </Project>
