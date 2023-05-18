@@ -49,6 +49,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoKates.LogsAndMetrics.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoKates.WebConsole", "NoKates.WebConsole\NoKates.WebConsole.csproj", "{DE64DCFB-7F5C-4BB9-9216-70BEB76722BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoKates.Admin", "NoKates.Admin\NoKates.Admin.csproj", "{681F5FBD-5B05-46B0-9058-CCC401C26020}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +121,10 @@ Global
 		{DE64DCFB-7F5C-4BB9-9216-70BEB76722BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE64DCFB-7F5C-4BB9-9216-70BEB76722BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE64DCFB-7F5C-4BB9-9216-70BEB76722BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{681F5FBD-5B05-46B0-9058-CCC401C26020}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{681F5FBD-5B05-46B0-9058-CCC401C26020}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{681F5FBD-5B05-46B0-9058-CCC401C26020}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{681F5FBD-5B05-46B0-9058-CCC401C26020}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,6 +146,7 @@ Global
 		{69CD7C32-68F9-4F8B-9DFC-3FE824DC8C92} = {D1BC60A5-C832-48BB-87D9-12CC0409742A}
 		{8C741965-A8C5-44A5-93F4-1682D626C20A} = {D1BC60A5-C832-48BB-87D9-12CC0409742A}
 		{DE64DCFB-7F5C-4BB9-9216-70BEB76722BC} = {75146489-844C-4550-B894-E04C78C087F2}
+		{681F5FBD-5B05-46B0-9058-CCC401C26020} = {75146489-844C-4550-B894-E04C78C087F2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2398506-F527-424E-890E-26425761E1DF}
