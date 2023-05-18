@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Pages\ServiceManagement\Components\ServiceStatus.razor" />
-    <None Include="Pages\ServiceManagement\StatusList.cshtml" />
+    <None Include="Shared\ServiceStatus.razor" />
   </ItemGroup>
 
   <ItemGroup>

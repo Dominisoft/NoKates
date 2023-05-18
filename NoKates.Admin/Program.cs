@@ -2,6 +2,7 @@ using Moq;
 using NoKates.Common.Infrastructure.Client;
 using NoKates.Common.Models;
 using NoKates.LogsAndMetrics.Common;
+using NoKates.LogsAndMetrics.Common.DataTransfer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,16 +10,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
+var core = new NoKatesCoreClient("http://LocalServiceHost/");
+var metrics = new MetricsClient("http://LocalServiceHost/NoKates.LogsAndMetrics/");
+builder.Services.AddSingleton<INoKatesCoreClient>(core);
+builder.Services.AddSingleton<IMetricsClient>(metrics);
 
 
-var mock = new Mock<INoKatesCoreClient>();
+//var mock = new Mock<INoKatesCoreClient>();
 
-var apps = new List<string> {"My.TestApp"};
+//var apps = new List<string> {"My.TestApp"};
+//mock.Setup(x => x.GetAllServiceNames(It.IsAny<string>())).Returns(new RestResponse<string[]>(200,""){Object = apps.ToArray()});
+//builder.Services.AddSingleton(mock.Object);
 
-mock.Setup(x => x.GetAllServiceNames(It.IsAny<string>())).Returns(new RestResponse<string[]>(200,""){Object = apps.ToArray()});
 
-builder.Services.AddSingleton(mock.Object);
-builder.Services.AddSingleton(new Mock<IMetricsClient>().Object);
+
+//var metrics = new List<RequestMetricSummaryDto>();
+//var m2 = new Mock<IMetricsClient>();
+//m2.Setup(x => x.GetMetricSummaryByServiceName(It.IsAny<string>())).Returns(new RestResponse<List<RequestMetricSummaryDto>>(200,""){Object = metrics });
+//builder.Services.AddSingleton(m2.Object);
 
 
 

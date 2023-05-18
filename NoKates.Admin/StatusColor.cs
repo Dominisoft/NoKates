@@ -1,4 +1,4 @@
-﻿namespace NoKates.Admin.Pages.ServiceManagement.Components
+﻿namespace NoKates.Admin
 {
     public static class StatusColor
     {
