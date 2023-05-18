@@ -1,7 +1,4 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Moq;
-using NoKates.Admin.Data;
 using NoKates.Common.Infrastructure.Client;
 using NoKates.Common.Models;
 using NoKates.LogsAndMetrics.Common;
@@ -11,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 
 
 
