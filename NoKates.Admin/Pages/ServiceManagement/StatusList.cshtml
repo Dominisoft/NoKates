@@ -1,0 +1,22 @@
+﻿@page "/ServiceManagement/StatusList"
+@using NoKates.Admin.Pages.ServiceManagement.Components
+@model NoKates.Admin.Pages.ServiceManagement.StatusListModel
+
+<div class="text-center" style="display:inline;">
+<h4>Services</h4>
+<div name="ColorKey" style="display:flex;background-color:black;">
+    <h6 style="color:@StatusColor.Good; padding:5px;">Good</h6>
+        <h6 style="color:@StatusColor.Degraded; padding:5px;">Slow Response</h6>
+        <h6 style="color:@StatusColor.Issue; padding:5px;">High Errors</h6>
+        <h6 style="color:@StatusColor.Offline; padding:5px;">Offline</h6>
+        <h6 style="color:@StatusColor.NoTraffic; padding:5px;">NoTraffic</h6>
+</div>
+    <div style="display: inline;">
+        @foreach (var service in Model.Services)
+        {
+            <ServiceStatus Name="@service" />
+        }
+    </div>
+    
+    <a href="./AddOrRemoveApps"> Add or Remove</a>
+</div>

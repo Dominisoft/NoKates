@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Moq;
 using NoKates.Admin.Data;
+using NoKates.Common.Infrastructure.Client;
+using NoKates.Common.Models;
+using NoKates.LogsAndMetrics.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +12,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+
+
+
+var mock = new Mock<INoKatesCoreClient>();
+
+var apps = new List<string> {"My.TestApp"};
+
+mock.Setup(x => x.GetAllServiceNames(It.IsAny<string>())).Returns(new RestResponse<string[]>(200,""){Object = apps.ToArray()});
+
+builder.Services.AddSingleton(mock.Object);
+builder.Services.AddSingleton(new Mock<IMetricsClient>().Object);
+
+
+
 
 var app = builder.Build();
 

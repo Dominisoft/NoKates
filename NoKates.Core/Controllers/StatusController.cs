@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NoKates.Core.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using NoKates.Common.Infrastructure.Attributes;
@@ -26,6 +27,16 @@ namespace NoKates.Core.Controllers
 
             return results.ToArray();
         }
+        [HttpGet("Services")]
+        [EndpointGroup("System.Admin")]
+        public ActionResult<string[]> GetAllServiceNames()
+        {
+            var apps = AppHelper.GetApps();
+            return apps.Select(a => a.ApplicationPoolName).ToArray();
+
+        }
+
+
         [HttpGet("EndpointGroups")]
         [EndpointGroup("System.Admin")]
         public ActionResult<Dictionary<string, List<string>>> GetEndpointGroups()

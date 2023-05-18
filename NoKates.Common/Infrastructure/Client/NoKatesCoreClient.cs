@@ -9,8 +9,10 @@ namespace NoKates.Common.Infrastructure.Client
     {
         RestResponse<JObject> GetStartupConfig();
         RestResponse<ServiceStatus[]> GetAllServiceStatuses();
+        RestResponse<string[]> GetAllServiceNames();
         RestResponse<Dictionary<string, List<string>>> GetEndpointGroups();
         RestResponse<ServiceStatus[]> GetAllServiceStatuses(string authToken);
+        RestResponse<string[]> GetAllServiceNames(string authToken);
         RestResponse<Dictionary<string, List<string>>> GetEndpointGroups(string authToken);
 
 
@@ -30,6 +32,9 @@ namespace NoKates.Common.Infrastructure.Client
         public RestResponse<ServiceStatus[]> GetAllServiceStatuses()
             => GetAllServiceStatuses(_authToken);
 
+        public RestResponse<string[]> GetAllServiceNames()
+            => GetAllServiceNames(_authToken);
+
         public RestResponse<Dictionary<string, List<string>>> GetEndpointGroups()
          => GetEndpointGroups(_authToken);
 
@@ -38,8 +43,11 @@ namespace NoKates.Common.Infrastructure.Client
 
         public RestResponse<ServiceStatus[]> GetAllServiceStatuses(string authToken)
             => HttpHelper.Get<ServiceStatus[]>($"{_baseUrl}/", authToken);
+        public RestResponse<string[]> GetAllServiceNames(string authToken)
+            => HttpHelper.Get<string[]>($"{_baseUrl}/Services", authToken);
 
         public RestResponse<Dictionary<string, List<string>>> GetEndpointGroups(string authToken)
             => HttpHelper.Get<Dictionary<string, List<string>>>($"{_baseUrl}/EndpointGroups", authToken);
+
     }
 }
