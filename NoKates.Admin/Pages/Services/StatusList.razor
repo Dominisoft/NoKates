@@ -1,13 +1,21 @@
-﻿@page "/ServiceManagement/StatusList"
+﻿@page "/Services/StatusList"
 @using NoKates.Common.Infrastructure.Client
-@inject INoKatesCoreClient client;
+@using NoKates.Common.Infrastructure.Helpers
+@using Blazored.LocalStorage
+@inject INoKatesCoreClient Client;
+@inject ILocalStorageService storage;
 @code {
 
-    public IEnumerable<string> Services { get; set; }
-
+    public List<string> Services { get; set; }
+    private string token;
     protected override async Task OnInitializedAsync()
     {
-        Services = client.GetAllServiceNames("").Object;
+        
+        token = await storage.GetItemAsStringAsync("AuthorizationToken");
+        HttpHelper.SetToken(token);
+        var response = Client.GetAllServiceNames(token);
+        
+        Services = response.Object.Distinct().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
     }
 }
 
@@ -22,12 +30,12 @@
         <h6 style="color:@StatusColor.NoTraffic; padding:5px;">NoTraffic</h6>
     </div>
     <div style="display: inline;">
-        @foreach (var service in Services)
+        @foreach (var service in Services??new List<string>())
         {
-            <ServiceStatus Name="@service" />
+            <ServiceStatusCard Name="@service" authToken="@token" />
         }
     </div>
 
-    <a href="./AddOrRemoveApps"> Add or Remove</a>
+    <a href="./Services/AppManagement"> Add or Remove</a>
 </div>
 

@@ -49,7 +49,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoKates.LogsAndMetrics.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoKates.WebConsole", "NoKates.WebConsole\NoKates.WebConsole.csproj", "{DE64DCFB-7F5C-4BB9-9216-70BEB76722BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoKates.Admin", "NoKates.Admin\NoKates.Admin.csproj", "{681F5FBD-5B05-46B0-9058-CCC401C26020}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoKates.Admin", "NoKates.Admin\NoKates.Admin.csproj", "{681F5FBD-5B05-46B0-9058-CCC401C26020}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

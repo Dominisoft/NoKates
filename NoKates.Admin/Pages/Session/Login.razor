@@ -1,0 +1,88 @@
+﻿@page "/Session/Login"
+@using NoKates.Identity.Common.Clients
+@using Blazored.LocalStorage
+@using NoKates.Admin.Helpers
+@inject IAuthenticationClient client;
+@inject NavigationManager NavManager;
+@inject ILocalStorageService storage;
+@code {
+    public string Username { get; set; }
+    public string Password { get; set; }
+    public string Message { get; set; }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (!firstRender) return;
+        var contains = await storage.ContainKeyAsync("AuthorizationToken");
+        if (contains)
+        {
+            var token = await storage.GetItemAsStringAsync("AuthorizationToken");
+            if (TokenHelper.TokenIsInvalid(token))
+                await storage.RemoveItemAsync("AuthorizationToken");
+            else
+                Message = "You are already logged in";
+        }
+    }
+
+    public async Task ProcessLogin()
+    {
+        var response = client.Authenticate(Username, Password);
+        if (response.IsError)
+            Message = $"Error - {response.Message}";
+        else
+        {
+            var token = response.Object;
+            Message = "Success";
+            await storage.SetItemAsStringAsync("AuthorizationToken", token);
+            NavManager.NavigateTo($"");
+        }
+        
+
+    }
+}
+
+<div>
+    <div class="col-md-4">
+        <section>
+            <form id="account" method="post">
+                <h4>Use a local account to log in.</h4>
+                <hr>
+                <div class="text-danger validation-summary-valid" data-valmsg-summary="true">
+                    <ul>
+                        <li style="display:none"></li>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <label for="Input_Email">Email</label>
+                    <input @onchange="args => { Username = args.Value?.ToString()??string.Empty; }" class="form-control" type="email" data-val="true" data-val-email="The Email field is not a valid e-mail address." data-val-required="The Email field is required." id="Input_Email" name="Input.Email" value="" autocomplete="off" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAXtJREFUOBGVUj2LwkAUnIjBICIIKe8gWKRKo2BvYXMgWNlYWZ3gn1B/htekibWVcH1aIVV+wQULCxsRtMrtrGYv8RLUB8nuvjczu+9DWywWH3EcL8X3jidM07QfAfucz+ffhJdeIZNwu+iLexoFnrr5Cr/+05xSOvBoX61WYdt2BvaSgGVZ6PV6+QKGYahApVKBKJY6p2PKeduUufb7fbTbbaxWKxwOB0ynU+x2O7ium4ndk3l+KYU8AW02m8UM8Jnn81limMLlcsnDK59IMRKHiXpBQibiEZkY0co3sSxlDegoMsdx0O12Ua/XEUUR1us1jsejhFNEvaBIgK07nU4IwxDNZhOdTicDLXO205OViYrDZrORLg5Qq9VSdUpwJSEwoUjiuF+FOEzTxGAwwH6/x3a7zUD+piXjBpLukDwej2XenufJdNLQhzUYjUao1WpoNBpywIbDYZqPwi6wz6xyEATQdV2ROKmJEVMoIECszdL3ffb7n5EsnJNf8S6HAZZBgLIAAAAASUVORK5CYII=&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%;">
+                    <span class="text-danger field-validation-valid" data-valmsg-for="Input.Email" data-valmsg-replace="true"></span>
+                </div>
+                <div class="form-group">
+                    <label for="Input_Password">Password</label>
+                    <input class="form-control" type="password" data-val="true" data-val-required="The Password field is required." id="Input_Password" name="Input.Password" autocomplete="off" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAXtJREFUOBGVUj2LwkAUnIjBICIIKe8gWKRKo2BvYXMgWNlYWZ3gn1B/htekibWVcH1aIVV+wQULCxsRtMrtrGYv8RLUB8nuvjczu+9DWywWH3EcL8X3jidM07QfAfucz+ffhJdeIZNwu+iLexoFnrr5Cr/+05xSOvBoX61WYdt2BvaSgGVZ6PV6+QKGYahApVKBKJY6p2PKeduUufb7fbTbbaxWKxwOB0ynU+x2O7ium4ndk3l+KYU8AW02m8UM8Jnn81limMLlcsnDK59IMRKHiXpBQibiEZkY0co3sSxlDegoMsdx0O12Ua/XEUUR1us1jsejhFNEvaBIgK07nU4IwxDNZhOdTicDLXO205OViYrDZrORLg5Qq9VSdUpwJSEwoUjiuF+FOEzTxGAwwH6/x3a7zUD+piXjBpLukDwej2XenufJdNLQhzUYjUao1WpoNBpywIbDYZqPwi6wz6xyEATQdV2ROKmJEVMoIECszdL3ffb7n5EsnJNf8S6HAZZBgLIAAAAASUVORK5CYII=&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%;">
+                    <span @onchange="args => { Password = args.Value?.ToString()??string.Empty; }" class="text-danger field-validation-valid" data-valmsg-for="Input.Password" data-valmsg-replace="true"></span>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label for="Input_RememberMe">
+                            <input type="checkbox" data-val="true" data-val-required="The Remember me? field is required." id="Input_RememberMe" name="Input.RememberMe" value="true">
+                            Remember me
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <button @onclick="ProcessLogin">Log in</button>
+        @if (@Message?.StartsWith("Error")??false)
+        {
+            <h3 style="color: red">@Message</h3>
+        }
+        else
+        {
+            <h3 style="color: green">@Message</h3>
+        }
+    </div>
+
+</div>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Web.Administration;
 using Newtonsoft.Json.Linq;
 using NoKates.Common.Infrastructure.Helpers;
 using NoKates.Common.Models;
@@ -10,8 +11,11 @@ namespace NoKates.Common.Infrastructure.Client
         RestResponse<JObject> GetStartupConfig();
         RestResponse<ServiceStatus[]> GetAllServiceStatuses();
         RestResponse<string[]> GetAllServiceNames();
+        RestResponse<PoolState> GetPoolState(string name);
+
         RestResponse<Dictionary<string, List<string>>> GetEndpointGroups();
         RestResponse<ServiceStatus[]> GetAllServiceStatuses(string authToken);
+        RestResponse<PoolState> GetPoolState(string name, string authToken);
         RestResponse<string[]> GetAllServiceNames(string authToken);
         RestResponse<Dictionary<string, List<string>>> GetEndpointGroups(string authToken);
 
@@ -35,6 +39,8 @@ namespace NoKates.Common.Infrastructure.Client
         public RestResponse<string[]> GetAllServiceNames()
             => GetAllServiceNames(_authToken);
 
+        public RestResponse<PoolState> GetPoolState(string name)
+            => GetPoolState(name, _authToken);
         public RestResponse<Dictionary<string, List<string>>> GetEndpointGroups()
          => GetEndpointGroups(_authToken);
 
@@ -45,6 +51,8 @@ namespace NoKates.Common.Infrastructure.Client
             => HttpHelper.Get<ServiceStatus[]>($"{_baseUrl}/", authToken);
         public RestResponse<string[]> GetAllServiceNames(string authToken)
             => HttpHelper.Get<string[]>($"{_baseUrl}/Services", authToken);
+        public RestResponse<PoolState> GetPoolState(string name, string authToken)
+            => HttpHelper.Get<PoolState>($"{_baseUrl}/Pool/{name}", authToken);
 
         public RestResponse<Dictionary<string, List<string>>> GetEndpointGroups(string authToken)
             => HttpHelper.Get<Dictionary<string, List<string>>>($"{_baseUrl}/EndpointGroups", authToken);

@@ -23,5 +23,5 @@ namespace NoKates.Admin
         public static string BaseUrl { get; set; }
     public static string HostSiteName { get; set; }
     public static string ConfigurationServiceUrl { get; set; }
-}
+    }
 }

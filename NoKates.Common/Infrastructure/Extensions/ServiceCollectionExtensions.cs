@@ -1,7 +1,6 @@
 using System;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
 using System.Text;
 using NoKates.Common.Infrastructure.Configuration;
 using NoKates.Common.Infrastructure.Controllers;

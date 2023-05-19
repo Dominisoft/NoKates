@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,6 +28,12 @@ namespace NoKates.Core.Infrastructure
                 }
             }
             return result;
+        }
+        public static ActionResult ToActionResult(this bool isSuccess)
+        {
+            if (isSuccess)
+                return new OkResult();
+            throw new Exception("Failed");
         }
     }
 }

@@ -1,0 +1,280 @@
+﻿@using NoKates.Common.Models
+@using NoKates.Common.Infrastructure.Extensions
+@using NoKates.Common.Infrastructure.Helpers
+@using NoKates.LogsAndMetrics.Common
+@using NoKates.LogsAndMetrics.Common.DataTransfer
+@using RepoDb
+@using NoKates.Admin.Data.ServiceManagement
+@using GlobalConfiguration = NoKates.Admin.GlobalConfiguration
+@using NoKates.Admin.Clients
+@using NoKates.Common.Infrastructure.Client
+@using Microsoft.Web.Administration
+@inject IMetricsClient MetricsClient;
+@inject IWebHostManagementClient WebHostManagementClient;
+@inject INoKatesCoreClient coreClient;
+<div>
+    @if (Loading)
+    {
+
+
+        <div style="border: solid; border-color: black; border-width: 2px;">
+            <div style="display: flex;">
+                <div style="width: 48%;">
+                    <div style="float: left; display: inline;">
+                        <div style="display: flex;">
+                            <h2 style="padding-left: 10px;">@Name </h2>
+                            <h6 style="float: left;">(-)</h6>
+                        </div>
+                        <h4 style="color: yellow; padding-left: 10px; float: left;">Loading...</h4><br />
+                        <h4 style="float: left; padding-left: 10px;">Version -</h4>
+                    </div>
+
+                </div>
+                <div style="align-content: flex-end; width: 48%;">
+                    <div style="text-align: right;">
+                        ...
+                    </div>
+                </div>
+            </div>
+            <div>
+                @*     Chart Area
+            *@
+            </div>
+        </div>
+
+
+
+
+    }
+    else
+    {
+
+
+        <div style="border: solid; border-color: black; border-width: 2px;">
+            <div style="display: flex;">
+                <div style="width: 48%;">
+                    <div style="float: left; display: inline;">
+                        <div style="display: flex;">
+                            <h2 style="padding-left: 10px;">@Name </h2>
+                            <h6 style="float: left;">(@Status?.Version?.Environment)</h6>
+                        </div>
+                        @if (Status?.IsOnline??false)
+                        {
+                            <h4 style="color: green; padding-left: 10px; float: left;">Online</h4>
+                        }
+                        else
+                        {
+                            <h4 style="color: red; padding-left: 10px; float: left;">Offline</h4>
+
+                        }
+
+                        <br />
+                        <h4 style="float: left; padding-left: 10px;">Version @Status?.Version?.Version</h4>
+                    </div>
+
+                </div>
+                <div style="align-content: flex-end; width: 48%;">
+                    <div style="text-align: right;">
+                        <div>
+                            <h6>Start: @Status?.StartTime</h6>
+                        </div>
+                        <div>
+                            <h6 style="text-align: right;">Deployed: @Status?.Version?.DeploymentDate</h6>
+                        </div>
+                        <div>
+                            <a href="~/ServiceManagement/Logs?ServiceName=@Name" title="View logs" style="padding: 3px;">
+                                <span class="iconify" data-icon="oi:file" data-width="50"></span>
+
+
+                            </a>
+
+                            <a href="~/ServiceManagement/Requests?ServiceName=@Name" title="View Request logs" style="padding: 3px;">
+                                <span class="iconify" data-icon="oi:globe" data-width="50"></span>
+
+
+                            </a>
+
+                            <a href="~/ServiceManagement/EndpointStatusList?ServiceName=@Name" title="View Metrics" style="padding: 3px;">
+                                <span class="iconify" data-icon="oi:bar-chart" data-width="50"></span>
+                            </a>
+
+
+                     
+                            
+                            
+                            @if (PoolState?.State == ObjectState.Started)
+                            {
+                                <a href="./StatusList?function=StopAppPool&name=@Name" title="Stop" style="padding: 3px;">
+                                    <span class="iconify" data-icon="oi:media-stop" data-width="50"></span>
+                                </a>
+
+                            }
+                            else
+                            {
+                                <a href="./StatusList?function=StartAppPool&name=@Name" title="Start" style="padding: 3px;">
+                                    <span class="iconify" data-icon="oi:media-play" data-width="50"></span>
+                                </a>
+                            }
+
+                        </div>
+                        <div>
+                            <h6 style="text-align: right;">Branch: @Status?.Version?.Branch-@Status?.Version?.LastCommitId</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                @if ( StatusPeriods.Count>1 )
+                {
+                    <svg class="availability-time-line-graphic" id="uptime-component-74dvc0qj8zdp" style="padding-left: 10px; align-content: center;" preserveAspectRatio="none" height="75" viewBox="0 0 1000 50">
+                        @foreach (var period in @StatusPeriods)
+                        {
+                            <rect height="@period.Height" width="@period.Width" x="@period.X" y="0" fill="@period.Color" data-html="true">
+                                <title>
+                                    Index: @period.RequestMetric.Index
+                                    Average Response Time: @period.RequestMetric.AverageResponseTime ms
+                                    Request Count: @period.RequestMetric.RequestCount
+                                    Error Count: @period.RequestMetric.Errors
+                                    Error Rate: @period.ErrorPercent.ToString("F2") %
+                                    @if (@period.RequestMetric.RequestCount > 0)
+                                    {
+                                        <p> Requests: @period.RequestMetric.FirstRequest - @period.RequestMetric.LastRequest</p>
+                                    }
+                                </title>
+                            </rect>
+                        }
+                    </svg>
+                }
+                else
+                {
+                    <h1>---Unable to get metrics---</h1>
+                }
+            </div>
+        </div>
+
+    }
+</div>
+
+@code {
+
+    [Parameter]
+    public string Name { get; set; }
+    [Parameter]
+    public string authToken { get; set; }
+
+
+    public ServiceStatus Status { get; set; }
+    public List<StatusPeriod> StatusPeriods { get; set; }
+    public PoolState PoolState { get; set; }
+
+    public bool Loading { get; set; } = true;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        StatusPeriods = await TryGeneratePeriods(Name);
+
+        Status = await TryGetStatus(Name);
+
+        PoolState = await TryGetPoolState(Name);
+
+        Loading = false;
+    }
+
+    private async Task<List<StatusPeriod>> TryGeneratePeriods(string name)
+    {
+        try
+        {
+            var result = await GenerateStatusPeriods(name);
+
+            return result;
+        }
+        catch (Exception e)
+        {
+            return new List<StatusPeriod>
+            {
+                new StatusPeriod
+                {
+                    Index = 0,
+                    Width = 168,
+                    Height = 50,
+                    Color = StatusColor.NoTraffic,
+                    RequestMetric = new RequestMetricSummaryDto()
+                    {
+
+                    }
+
+                }
+            };
+        }
+    }
+
+    private async Task<List<StatusPeriod>> GenerateStatusPeriods(string name)
+    {
+        var result = await Task.Run(() =>
+        {
+            HttpHelper.SetToken(authToken);
+            var metrics = MetricsClient.GetMetricSummaryByServiceName(name).ThrowIfError();
+            var periods = metrics.Select(metric =>
+            {
+                var status = StatusColor.Good;
+
+                var period = new StatusPeriod
+                {
+                    Index = metric.Index,
+                    X =  metric.Index * 6,
+                    Height = 50,
+                    Width = 5,
+                    Color = status,
+                    RequestMetric = metric
+
+                };
+
+
+
+                if (metric.RequestCount == 0)
+                    status = StatusColor.NoTraffic;
+                else if (period.ErrorPercent > GlobalConfiguration.ErrorPercentThreshold)
+                    status = StatusColor.Issue;
+                else if (metric.AverageResponseTime > GlobalConfiguration.ResponseTimeThreshold)
+                    status = StatusColor.Degraded;
+                period.Color = status;
+
+                return period;
+            }).ToList();
+            return periods;
+        });
+
+        return result;
+
+    }
+
+
+    private async Task<PoolState> TryGetPoolState(string name)
+    {
+        var response = await Task.Run(() => coreClient.GetPoolState(Name, authToken));
+
+        return response.ThrowIfError();
+
+    }
+
+
+    private async Task<ServiceStatus> TryGetStatus(string name)
+    {
+        try
+        {
+
+            var response = await Task.Run(() => HttpHelper.Get<ServiceStatus>($"http://devappserver/{Name}/Nokates/ServiceStatus", authToken));
+            return response.ThrowIfError();
+        }
+        catch (Exception e)
+        {
+            return new ServiceStatus() { IsOnline = false, Name = Name };
+        }
+
+    }
+
+
+
+
+}

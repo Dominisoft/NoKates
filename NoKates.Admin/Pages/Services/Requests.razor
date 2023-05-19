@@ -1,0 +1,153 @@
+﻿@using NoKates.Common.Models
+@using NoKates.Common.Infrastructure.Extensions
+@using NoKates.Common.Infrastructure.Client
+@inject IHttpContextAccessor ContextAccessor;
+@inject INoKatesCoreClient coreClient;
+<h3>Requests</h3>
+
+@code {
+    public string RequestTrackingId { get; set; }
+    public string ResponseCode { get; set; }
+    public string Source { get; set; }
+    public string Start { get; set; }
+    public string End { get; set; }
+    public string Contains { get; set; }
+    public string NotContains { get; set; }
+    public string ServiceName { get; set; }
+
+
+
+    public List<RequestMetric> metrics;
+    public List<RequestMetric> filteredMetrics;
+
+
+    public override void LoadData(string token)
+    {
+
+
+        RequestTrackingId = GetQueryString(nameof(RequestTrackingId));
+        ResponseCode = GetQueryString(nameof(ResponseCode));
+        Source = GetQueryString(nameof(Source));
+        Start = GetQueryString(nameof(Start));
+        End = GetQueryString(nameof(End));
+        Contains = GetQueryString(nameof(Contains));
+        NotContains = GetQueryString(nameof(NotContains));
+        ServiceName = GetQueryString(nameof(ServiceName));
+
+
+
+        metrics = coreClient.GetRequestMetrics(ServiceName, token);
+
+        Filter();
+    }
+
+    private string GetQueryString(string name)
+    {
+        var Request = ContextAccessor.HttpContext.Request;
+        var value = string.Empty;
+        if (Request.Query.ContainsKey(name))
+            value = Request.Query[name];
+        return value;
+    }
+
+    public string GetExpanded(Guid? entryRequestTrackingId)
+    {
+        return entryRequestTrackingId?.ToString() == RequestTrackingId ? "Open" : string.Empty;
+    }
+
+
+
+
+
+    public void Filter()
+    {
+
+        filteredMetrics = metrics ?? new List<RequestMetric>();
+
+        if (!string.IsNullOrWhiteSpace(Source))
+            filteredMetrics.RemoveAll(e => !e.RequestSource.Contains(Source));
+        if (!string.IsNullOrWhiteSpace(RequestTrackingId))
+            filteredMetrics.RemoveAll(e => e.RequestTrackingId.ToString() != RequestTrackingId);
+        if (!string.IsNullOrWhiteSpace(ResponseCode) && ResponseCode != "0")
+            filteredMetrics.RemoveAll(e => e.ResponseCode.ToString() != ResponseCode);
+        if (!string.IsNullOrWhiteSpace(Contains))
+            filteredMetrics.RemoveAll(e => !e.Serialize().Contains(Contains));
+        if (!string.IsNullOrWhiteSpace(NotContains))
+            filteredMetrics.RemoveAll(e => e.Serialize().Contains(NotContains));
+
+        if (!string.IsNullOrWhiteSpace(Start))
+            filteredMetrics.RemoveAll(e => e.RequestStart < DateTime.Parse(Start));
+        if (!string.IsNullOrWhiteSpace(End))
+            filteredMetrics.RemoveAll(e => e.RequestStart > DateTime.Parse(End));
+
+    }
+
+}
+
+
+
+<div>
+    Request Logs for @GetQueryString("ServiceName")
+    <div>
+        <div style="overflow:scroll; height:700px">
+            @foreach (var entry in filteredMetrics)
+            {
+                <div id="@entry?.RequestTrackingId">
+                    <details class="deque-expander" @GetExpanded(@entry?.RequestTrackingId)>
+
+                        <summary class="deque-expander-summary" tabindex="0" aria-expanded="false" role="button">
+                            <span class="toggle-indicator"></span>
+                            @entry?.RequestStart : @entry?.RequestType @entry?.RequestPath Returned @entry?.ResponseCode in @entry?.ResponseTime ms
+                        </summary>
+
+                        <div class="deque-expander-content">
+                            @if (entry?.ResponseCode > 0)
+                            {
+                                <a href="~/ServiceManagement/RequestFlow?requestId=@entry?.RequestTrackingId" title="View Request Flow" style="padding: 3px;">
+                                    <i class="fas fa-chart-line fa-3x"></i>
+                                </a>
+                            }
+                            <p><b>Request</b> <br /><code>@entry?.RequestJson</code> </p>
+                            <p><b>Response</b> <br /><code>@entry?.ResponseJson</code> </p>
+
+
+                        </div>
+                    </details>
+                </div>
+
+
+            }
+        </div>
+        <div id="filters" style="height:100px">
+            <form style=" margin: 8px;
+                         border: 1px solid silver;
+                         padding: 8px;
+                         border-radius: 4px;" name="Filter" id="filterForm">
+                <label for="Source">Source</label>
+                <input id="Source" type="text" style="padding-left: 25px;" @onchange="args => Source=args.Value?.ToString()" asp-for="Source" value="@Source" />
+
+                <label for="responseCode">Response Code</label>
+                <input id="responseCode" type="number" @onchange="args => ResponseCode=args.Value?.ToString()" asp-for="ResponseCode" value="@ResponseCode" />
+
+                <label for="DateTimeStart">Start</label>
+                <input id="DateTimeStart" type="datetime" @onchange="args => Start=args.Value?.ToString()" asp-for="Start" value="@Start" />
+
+                <label for="DateTimeEnd">End</label>
+                <input id="DateTimeEnd" type="datetime" @onchange="args => End=args.Value?.ToString()" asp-for="End" value="@End" />
+                <br />
+                <label for="TextContains">Contains</label>
+                <input id="TextContains" type="text" @onchange="args => Contains=args.Value?.ToString()" asp-for="Contains" value="@Contains" />
+
+                <label for="TextNotContains">Does not contain</label>
+                <input id="TextNotContains" type="text" @onchange="args => NotContains=args.Value?.ToString()" asp-for="NotContains" value="@NotContains" />
+
+                <label for="RequestId">Request Id</label>
+                <input id="RequestId" type="text" @onchange="args => RequestTrackingId=args.Value?.ToString()" asp-for="RequestTrackingId" value="@RequestTrackingId" />
+
+                <input id="serviceName" type="text" @onchange="args => ServiceName=args.Value?.ToString()" asp-for="ServiceName" value="@ServiceName" style="visibility: collapse" />
+
+            </form>
+
+        </div>
+    </div>
+</div>

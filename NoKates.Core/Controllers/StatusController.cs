@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using NoKates.Common.Infrastructure.Attributes;
 using NoKates.Common.Infrastructure.Helpers;
 using NoKates.Common.Models;
+using Microsoft.Web.Administration;
 
 namespace NoKates.Core.Controllers
 {
@@ -31,9 +32,21 @@ namespace NoKates.Core.Controllers
         [EndpointGroup("System.Admin")]
         public ActionResult<string[]> GetAllServiceNames()
         {
-            var apps = AppHelper.GetApps();
+            var apps = AppHelper.GetApps().Where(app => app.ApplicationPoolName != AppHelper.GetAppName());
             return apps.Select(a => a.ApplicationPoolName).ToArray();
 
+        }
+        [HttpGet("Pool/{name}")]
+        [EndpointGroup("System.Admin")]
+        public PoolState GetPool(string name)
+        {
+            using ServerManager serverManager = new ServerManager();
+            var pools = serverManager.ApplicationPools;
+            var pool = pools.FirstOrDefault(p => p.Name == name);
+            return new PoolState
+            {
+                State = pool.State
+            };
         }
 
 
