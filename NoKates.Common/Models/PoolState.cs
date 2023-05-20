@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Web.Administration;
+﻿using Microsoft.Web.Administration;
 
 namespace NoKates.Common.Models
 {

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Microsoft.Web.Administration;
 using NoKates.Common.Infrastructure.Helpers;
-using RepoDb;
 
 namespace NoKates.Core.Application
 {
