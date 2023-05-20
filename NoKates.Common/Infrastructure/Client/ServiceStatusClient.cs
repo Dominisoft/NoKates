@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using NoKates.Common.Infrastructure.Helpers;
 using NoKates.Common.Models;
 namespace NoKates.Common.Infrastructure.Client
 {
     public interface IServiceStatusClient
     {
+        void ChangeService(string service);
         RestResponse<ServiceStatus> GetStatus();
         RestResponse<List<LogEntry>> GetLog();
         RestResponse<List<RequestMetric>> GetRequestResponses();
@@ -24,17 +22,20 @@ namespace NoKates.Common.Infrastructure.Client
     {
         private string _token;
         private string _baseUrl;
-        public ServiceStatusClient(string baseUrl, string token):this(baseUrl)
+        private string _service;
+        public ServiceStatusClient(string baseUrl,string service, string token):this(baseUrl,service)
         {
             _token = token;
         }
 
-        public ServiceStatusClient(string baseUrl)
+        public ServiceStatusClient(string baseUrl,string service)
         {
-            _baseUrl = baseUrl;
+            _baseUrl = baseUrl.Trim('/');
+            ChangeService(service);
         }
 
-
+        public void ChangeService(string service)
+            => _service = service.Trim('/');
         public RestResponse<ServiceStatus> GetStatus()
             => GetStatus(_token);
 
@@ -51,23 +52,23 @@ namespace NoKates.Common.Infrastructure.Client
             => ListAllEndpoints(_token);
 
         public RestResponse<ServiceStatus> GetStatus(string token)
-            => HttpHelper.Get<ServiceStatus>($"{_baseUrl}/NoKates/ServiceStatus",token);
+            => HttpHelper.Get<ServiceStatus>($"{_baseUrl}/{_service}/NoKates/ServiceStatus",token);
 
 
         public RestResponse<List<LogEntry>> GetLog(string token)
-            => HttpHelper.Get<List<LogEntry>>($"{_baseUrl}/NoKates/Log", token);
+            => HttpHelper.Get<List<LogEntry>>($"{_baseUrl}/{_service}/NoKates/Log", token);
 
 
         public RestResponse<List<RequestMetric>> GetRequestResponses(string token)
-            => HttpHelper.Get<List<RequestMetric>>($"{_baseUrl}/NoKates/Requests", token);
+            => HttpHelper.Get<List<RequestMetric>>($"{_baseUrl}/{_service}/NoKates/Requests", token);
 
 
         public RestResponse<Dictionary<string, List<string>>> GetEndpointGroups(string token)
-            => HttpHelper.Get<Dictionary<string, List<string>>>($"{_baseUrl}/NoKates/EndpointGroups", token);
+            => HttpHelper.Get<Dictionary<string, List<string>>>($"{_baseUrl}/{_service}/NoKates/EndpointGroups", token);
 
 
         public RestResponse<List<EndpointDescription>> ListAllEndpoints(string token)
-            => HttpHelper.Get<List<EndpointDescription>>($"{_baseUrl}/NoKates/Endpoints", token);
+            => HttpHelper.Get<List<EndpointDescription>>($"{_baseUrl}/{_service}/NoKates/Endpoints", token);
 
     }
 }

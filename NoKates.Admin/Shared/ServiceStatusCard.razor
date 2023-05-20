@@ -82,19 +82,19 @@
                             <h6 style="text-align: right;">Deployed: @Status?.Version?.DeploymentDate</h6>
                         </div>
                         <div>
-                            <a href="~/ServiceManagement/Logs?ServiceName=@Name" title="View logs" style="padding: 3px;">
+                            <a href="Services/Logs?ServiceName=@Name" title="View logs" style="padding: 3px;">
                                 <span class="iconify" data-icon="oi:file" data-width="50"></span>
 
 
                             </a>
 
-                            <a href="~/ServiceManagement/Requests?ServiceName=@Name" title="View Request logs" style="padding: 3px;">
+                            <a href="Services/@Name/Requests" title="View Request logs" style="padding: 3px;">
                                 <span class="iconify" data-icon="oi:globe" data-width="50"></span>
 
 
                             </a>
 
-                            <a href="~/ServiceManagement/EndpointStatusList?ServiceName=@Name" title="View Metrics" style="padding: 3px;">
+                            <a href="Services/EndpointStatusList?ServiceName=@Name" title="View Metrics" style="padding: 3px;">
                                 <span class="iconify" data-icon="oi:bar-chart" data-width="50"></span>
                             </a>
 

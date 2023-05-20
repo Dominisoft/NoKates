@@ -25,17 +25,19 @@ builder.Services.AddBlazoredLocalStorage(config => {
     }
 );
 
-var core = new NoKatesCoreClient("http://LocalServiceHost");
-var metrics = new MetricsClient("http://LocalServiceHost/NoKates.LogsAndMetrics");
-var identity = new AuthenticationClient("http://LocalServiceHost/NoKates.Identity");
-var config = new ConfigurationClient("http://LocalServiceHost/NoKates.Configuration");
-var webclient = new WebHostManagementClient("http://LocalServiceHost/Management");
+var baseUrl = "http://LocalServiceHost";
+var core = new NoKatesCoreClient($"{baseUrl}");
+var metrics = new MetricsClient($"{baseUrl}/NoKates.LogsAndMetrics");
+var identity = new AuthenticationClient($"{baseUrl}/NoKates.Identity");
+var config = new ConfigurationClient($"{baseUrl}/NoKates.Configuration");
+var webclient = new WebHostManagementClient($"{baseUrl}/Management");
+var statusClient = new WebHostManagementClient($"{baseUrl}/Management");
 builder.Services.AddSingleton<INoKatesCoreClient>(core);
 builder.Services.AddSingleton<IMetricsClient>(metrics);
 builder.Services.AddSingleton<IAuthenticationClient>(identity);
 builder.Services.AddSingleton<IConfigurationClient>(config);
 builder.Services.AddSingleton<IWebHostManagementClient>(webclient);
-
+builder.Services.AddTransient<IServiceStatusClient>((x) => new ServiceStatusClient(baseUrl, ""));
 //var mock = new Mock<INoKatesCoreClient>();
 
 //var apps = new List<string> {"My.TestApp"};

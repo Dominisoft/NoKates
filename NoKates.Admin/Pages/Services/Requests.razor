@@ -1,9 +1,11 @@
-﻿@using NoKates.Common.Models
+﻿@page "/Services/{ServiceName}/Requests"
+@using NoKates.Common.Models
 @using NoKates.Common.Infrastructure.Extensions
 @using NoKates.Common.Infrastructure.Client
+@using Blazored.LocalStorage
 @inject IHttpContextAccessor ContextAccessor;
-@inject INoKatesCoreClient coreClient;
-<h3>Requests</h3>
+@inject IServiceStatusClient statusClient;
+@inject ILocalStorageService storage;
 
 @code {
     public string RequestTrackingId { get; set; }
@@ -13,6 +15,7 @@
     public string End { get; set; }
     public string Contains { get; set; }
     public string NotContains { get; set; }
+    [Parameter]
     public string ServiceName { get; set; }
 
 
@@ -20,35 +23,27 @@
     public List<RequestMetric> metrics;
     public List<RequestMetric> filteredMetrics;
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        var token = await storage.GetItemAsStringAsync("AuthorizationToken");
+        LoadData(token);
+    }
 
-    public override void LoadData(string token)
+
+
+    public void LoadData(string token)
     {
 
 
-        RequestTrackingId = GetQueryString(nameof(RequestTrackingId));
-        ResponseCode = GetQueryString(nameof(ResponseCode));
-        Source = GetQueryString(nameof(Source));
-        Start = GetQueryString(nameof(Start));
-        End = GetQueryString(nameof(End));
-        Contains = GetQueryString(nameof(Contains));
-        NotContains = GetQueryString(nameof(NotContains));
-        ServiceName = GetQueryString(nameof(ServiceName));
 
-
-
-        metrics = coreClient.GetRequestMetrics(ServiceName, token);
+        statusClient.ChangeService(ServiceName);
+        var response = statusClient.GetRequestResponses(token);
+        metrics = response.ThrowIfError();
 
         Filter();
     }
 
-    private string GetQueryString(string name)
-    {
-        var Request = ContextAccessor.HttpContext.Request;
-        var value = string.Empty;
-        if (Request.Query.ContainsKey(name))
-            value = Request.Query[name];
-        return value;
-    }
 
     public string GetExpanded(Guid? entryRequestTrackingId)
     {
@@ -87,10 +82,10 @@
 
 
 <div>
-    Request Logs for @GetQueryString("ServiceName")
+    Request Logs for @ServiceName
     <div>
         <div style="overflow:scroll; height:700px">
-            @foreach (var entry in filteredMetrics)
+            @foreach (var entry in filteredMetrics??new List<RequestMetric>())
             {
                 <div id="@entry?.RequestTrackingId">
                     <details class="deque-expander" @GetExpanded(@entry?.RequestTrackingId)>
@@ -103,7 +98,7 @@
                         <div class="deque-expander-content">
                             @if (entry?.ResponseCode > 0)
                             {
-                                <a href="~/ServiceManagement/RequestFlow?requestId=@entry?.RequestTrackingId" title="View Request Flow" style="padding: 3px;">
+                                <a href="./RequestFlow/@entry?.RequestTrackingId" title="View Request Flow" style="padding: 3px;">
                                     <i class="fas fa-chart-line fa-3x"></i>
                                 </a>
                             }
