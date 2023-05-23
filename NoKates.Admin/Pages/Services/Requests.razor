@@ -3,30 +3,30 @@
 @using NoKates.Common.Infrastructure.Extensions
 @using NoKates.Common.Infrastructure.Client
 @using Blazored.LocalStorage
-@inject IHttpContextAccessor ContextAccessor;
-@inject IServiceStatusClient statusClient;
-@inject ILocalStorageService storage;
+@using NoKates.Admin.Helpers
+@inject IServiceStatusClient StatusClient;
+@inject ILocalStorageService Storage;
 
 @code {
-    public string RequestTrackingId { get; set; }
-    public string ResponseCode { get; set; }
-    public string Source { get; set; }
-    public string Start { get; set; }
-    public string End { get; set; }
-    public string Contains { get; set; }
-    public string NotContains { get; set; }
+    public string? RequestTrackingId { get; set; }
+    public string? ResponseCode { get; set; }
+    public string? Source { get; set; }
+    public string? Start { get; set; }
+    public string? End { get; set; }
+    public string? Contains { get; set; }
+    public string? NotContains { get; set; }
     [Parameter]
-    public string ServiceName { get; set; }
+    public string? ServiceName { get; set; }
 
 
 
-    public List<RequestMetric> metrics;
-    public List<RequestMetric> filteredMetrics;
+    public List<RequestMetric> Metrics = new List<RequestMetric>();
+    public List<RequestMetric> FilteredMetrics = new List<RequestMetric>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
-        var token = await storage.GetItemAsStringAsync("AuthorizationToken");
+        var token = await Storage.GetToken();
         LoadData(token);
     }
 
@@ -37,9 +37,9 @@
 
 
 
-        statusClient.ChangeService(ServiceName);
-        var response = statusClient.GetRequestResponses(token);
-        metrics = response.ThrowIfError();
+        StatusClient.ChangeService(ServiceName);
+        var response = StatusClient.GetRequestResponses(token);
+        Metrics = response.ThrowIfError();
 
         Filter();
     }
@@ -57,23 +57,23 @@
     public void Filter()
     {
 
-        filteredMetrics = metrics ?? new List<RequestMetric>();
+        FilteredMetrics = Metrics ?? new List<RequestMetric>();
 
         if (!string.IsNullOrWhiteSpace(Source))
-            filteredMetrics.RemoveAll(e => !e.RequestSource.Contains(Source));
+            FilteredMetrics.RemoveAll(e => !e.RequestSource.Contains(Source));
         if (!string.IsNullOrWhiteSpace(RequestTrackingId))
-            filteredMetrics.RemoveAll(e => e.RequestTrackingId.ToString() != RequestTrackingId);
+            FilteredMetrics.RemoveAll(e => e.RequestTrackingId.ToString() != RequestTrackingId);
         if (!string.IsNullOrWhiteSpace(ResponseCode) && ResponseCode != "0")
-            filteredMetrics.RemoveAll(e => e.ResponseCode.ToString() != ResponseCode);
+            FilteredMetrics.RemoveAll(e => e.ResponseCode.ToString() != ResponseCode);
         if (!string.IsNullOrWhiteSpace(Contains))
-            filteredMetrics.RemoveAll(e => !e.Serialize().Contains(Contains));
+            FilteredMetrics.RemoveAll(e => !e.Serialize().Contains(Contains));
         if (!string.IsNullOrWhiteSpace(NotContains))
-            filteredMetrics.RemoveAll(e => e.Serialize().Contains(NotContains));
+            FilteredMetrics.RemoveAll(e => e.Serialize().Contains(NotContains));
 
         if (!string.IsNullOrWhiteSpace(Start))
-            filteredMetrics.RemoveAll(e => e.RequestStart < DateTime.Parse(Start));
+            FilteredMetrics.RemoveAll(e => e.RequestStart < DateTime.Parse(Start));
         if (!string.IsNullOrWhiteSpace(End))
-            filteredMetrics.RemoveAll(e => e.RequestStart > DateTime.Parse(End));
+            FilteredMetrics.RemoveAll(e => e.RequestStart > DateTime.Parse(End));
 
     }
 
@@ -85,7 +85,7 @@
     Request Logs for @ServiceName
     <div>
         <div style="overflow:scroll; height:700px">
-            @foreach (var entry in filteredMetrics??new List<RequestMetric>())
+            @foreach (var entry in FilteredMetrics??new List<RequestMetric>())
             {
                 <div id="@entry?.RequestTrackingId">
                     <details class="deque-expander" @GetExpanded(@entry?.RequestTrackingId)>

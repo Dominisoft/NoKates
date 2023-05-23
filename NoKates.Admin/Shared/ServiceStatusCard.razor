@@ -11,7 +11,7 @@
 @using Microsoft.Web.Administration
 @inject IMetricsClient MetricsClient;
 @inject IWebHostManagementClient WebHostManagementClient;
-@inject INoKatesCoreClient coreClient;
+@inject INoKatesCoreClient CoreClient;
 <div>
     @if (Loading)
     {
@@ -82,7 +82,7 @@
                             <h6 style="text-align: right;">Deployed: @Status?.Version?.DeploymentDate</h6>
                         </div>
                         <div>
-                            <a href="Services/Logs?ServiceName=@Name" title="View logs" style="padding: 3px;">
+                            <a href="Services/@Name/Logs" title="View logs" style="padding: 3px;">
                                 <span class="iconify" data-icon="oi:file" data-width="50"></span>
 
 
@@ -153,6 +153,9 @@
         </div>
 
     }
+    
+    <BlazoredToasts Position="ToastPosition.BottomRight"
+                     />
 </div>
 
 @code {
@@ -160,7 +163,7 @@
     [Parameter]
     public string Name { get; set; }
     [Parameter]
-    public string authToken { get; set; }
+    public string AuthToken { get; set; }
 
 
     public ServiceStatus Status { get; set; }
@@ -170,8 +173,10 @@
     public bool Loading { get; set; } = true;
 
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await base.OnAfterRenderAsync(firstRender);
+        if (!firstRender) return;
         StatusPeriods = await TryGeneratePeriods(Name);
 
         Status = await TryGetStatus(Name);
@@ -179,6 +184,7 @@
         PoolState = await TryGetPoolState(Name);
 
         Loading = false;
+        StateHasChanged();
     }
 
     private async Task<List<StatusPeriod>> TryGeneratePeriods(string name)
@@ -213,7 +219,7 @@
     {
         var result = await Task.Run(() =>
         {
-            HttpHelper.SetToken(authToken);
+            HttpHelper.SetToken(AuthToken);
             var metrics = MetricsClient.GetMetricSummaryByServiceName(name).ThrowIfError();
             var periods = metrics.Select(metric =>
             {
@@ -252,7 +258,7 @@
 
     private async Task<PoolState> TryGetPoolState(string name)
     {
-        var response = await Task.Run(() => coreClient.GetPoolState(Name, authToken));
+        var response = await Task.Run(() => CoreClient.GetPoolState(Name, AuthToken));
 
         return response.ThrowIfError();
 
@@ -264,7 +270,7 @@
         try
         {
 
-            var response = await Task.Run(() => HttpHelper.Get<ServiceStatus>($"http://devappserver/{Name}/Nokates/ServiceStatus", authToken));
+            var response = await Task.Run(() => HttpHelper.Get<ServiceStatus>($"http://devappserver/{Name}/Nokates/ServiceStatus", AuthToken));
             return response.ThrowIfError();
         }
         catch (Exception e)

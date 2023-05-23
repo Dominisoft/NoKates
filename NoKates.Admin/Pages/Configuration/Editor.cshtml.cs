@@ -9,12 +9,12 @@ namespace NoKates.Admin.Pages.Configuration
         #region Local Properties
 
 
-        private string[] blacklist = new[] { "Master", "defaults", "RoutingDefinitions" };
-        public string templateJson { get; set; }
-        public string masterJson { get; set; }
-        public string defaultJson { get; set; }
-        public string configJson { get; set; }
-        public string selectedFileName { get; set; }
+        private string[] _blacklist = new[] { "Master", "defaults", "RoutingDefinitions" };
+        public string TemplateJson { get; set; }
+        public string MasterJson { get; set; }
+        public string DefaultJson { get; set; }
+        public string ConfigJson { get; set; }
+        public string SelectedFileName { get; set; }
         public List<SelectListItem> FileNames { get; set; }
         public IConfigurationClient Client;
 
@@ -30,7 +30,7 @@ namespace NoKates.Admin.Pages.Configuration
         {
             FileNames = Client
                 .GetFiles(string.Empty)
-                .Where(name => !blacklist.Contains(name))
+                .Where(name => !_blacklist.Contains(name))
                 .Select(name => new SelectListItem(name, name))
                 .ToList();
 
@@ -39,14 +39,14 @@ namespace NoKates.Admin.Pages.Configuration
         public void OnGet()
         {
             if (Request.Query.ContainsKey("templateName"))
-                selectedFileName = Request.Query["templateName"].ToString();
-            else selectedFileName = FileNames.First().Value;
+                SelectedFileName = Request.Query["templateName"].ToString();
+            else SelectedFileName = FileNames.First().Value;
 
 
-            templateJson = Client.GetConfigRawByApplicationName(selectedFileName, string.Empty);
-            masterJson = Client.GetConfigRawByApplicationName("Master", string.Empty);
-            defaultJson = Client.GetConfigRawByApplicationName("defaults", string.Empty);
-            configJson = Client.GetConfigWithDefaultsByApplicationName(selectedFileName, string.Empty);
+            TemplateJson = Client.GetConfigRawByApplicationName(SelectedFileName, string.Empty);
+            MasterJson = Client.GetConfigRawByApplicationName("Master", string.Empty);
+            DefaultJson = Client.GetConfigRawByApplicationName("defaults", string.Empty);
+            ConfigJson = Client.GetConfigWithDefaultsByApplicationName(SelectedFileName, string.Empty);
         }
     }
 }

@@ -1,0 +1,15 @@
+﻿@page "/Session/Logout"
+@using Blazored.LocalStorage
+@inject NavigationManager Nav;
+@inject ILocalStorageService Storage;
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        await Storage.ClearAsync();
+        MainLayout.LoginValid = false;
+        StateHasChanged();
+        Nav.NavigateTo(string.Empty);
+    }
+
+}

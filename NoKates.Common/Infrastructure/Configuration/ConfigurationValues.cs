@@ -10,6 +10,7 @@ namespace NoKates.Common.Infrastructure.Configuration
 {
     public static class ConfigurationValues
     {
+        public static string DefaultBaseUrl { get; set; }= "http://LocalServiceHost";
         public static string Token => _token ?? SetToken();
         private static string _token;
         public static string JsonConfig { get; private set; } = "{}";
@@ -60,7 +61,7 @@ namespace NoKates.Common.Infrastructure.Configuration
      
         internal static void LoadConfig()
         {
-            var coreClient = new NoKatesCoreClient("http://LocalServiceHost");
+            var coreClient = new NoKatesCoreClient(DefaultBaseUrl);
             var response = coreClient.GetStartupConfig();
             var configurationUrl = response.Object["ConfigurationServiceUrl"].ToString();
             var configUri = $"{configurationUrl}/{AppHelper.GetAppName()}";

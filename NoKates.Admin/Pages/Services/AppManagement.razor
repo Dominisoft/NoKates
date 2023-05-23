@@ -3,7 +3,7 @@
 @using Blazored.LocalStorage
 @inject IWebHostManagementClient WebHostManagementClient;
 @inject INoKatesCoreClient CoreClient;
-@inject ILocalStorageService storage;
+@inject ILocalStorageService Storage;
 
 @page "/Services/AppManagement"
 @code {
@@ -34,7 +34,7 @@
         //    Add();
         //else
         //    Remove();
-        var token = await storage.GetItemAsStringAsync("AuthorizationToken");
+        var token = await Storage.GetItemAsStringAsync("AuthorizationToken");
 
         LoadData(token);
     }

@@ -1,0 +1,83 @@
+﻿@page "/Services/{serviceName}/Logs"
+@using NoKates.Common.Infrastructure.Client
+@using NoKates.Common.Models
+@using System.Diagnostics
+@using Blazored.LocalStorage
+@using Blazored.Toast.Services
+@using NoKates.Admin.Helpers
+@using NoKates.Common.Infrastructure.Extensions
+@inject IServiceStatusClient Client;
+@inject NavigationManager Nav;
+@inject IToastService Toast;
+@inject ILocalStorageService Storage;
+@code {
+
+    [Parameter]
+    public string ServiceName { get; set; }
+
+    public List<LogEntry> LogEntries;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (!firstRender) return;
+        LoadData(await Storage.GetToken());
+        StateHasChanged();
+    }
+
+    public void LoadData(string token)
+    {
+
+        if (ServiceName == "System_Event_Log")
+        {
+            LoadEventLog();
+            return;
+        }
+        try
+        {
+            Client.ChangeService(ServiceName);
+            LogEntries = Client.GetLog(token).ThrowIfError();
+            Toast.ShowSuccess($"Loaded log entries from {LogEntries.Min(x => x.Date)} - {LogEntries.Max(x => x.Date)}");
+        }
+        catch (Exception e)
+        {
+            Toast.ShowError("Error Loading Logs");
+            Nav.NavigateTo("../System_Event_Log/Logs");
+        }
+
+    }
+
+    private void LoadEventLog()
+    {
+        var eventLogName = "Application";
+        LogEntries = new List<LogEntry>();
+            
+        var eventLog = new EventLog();
+        eventLog.Log = eventLogName;
+        var logs = eventLog.Entries;
+        foreach (EventLogEntry eventLogEntry in logs)
+        {
+            if (
+                eventLogEntry.TimeGenerated > DateTime.Now.AddHours(-4)
+                && eventLogEntry.Source == ".NET Runtime"
+                && eventLogEntry.EntryType == EventLogEntryType.Error
+                )
+                LogEntries.Add(new LogEntry
+                {
+                    Date = eventLogEntry.TimeGenerated,
+                    Message = eventLogEntry.Message,
+                    Source = eventLogEntry.Source
+                });
+        }
+    }
+}
+
+<div class="text-center">
+    Logs for @ServiceName
+    <div style="overflow:scroll; height:800px; text-align: left;">
+        @foreach(var entry in @LogEntries?.OrderByDescending(l => l.Date)?.ToList()??new List<LogEntry>())
+        {
+            <p>@entry.Date - @entry.Message</p> <hr style="  border-top: 8px solid #bbb; border-radius: 3px;"/>
+        }
+    </div>
+</div>

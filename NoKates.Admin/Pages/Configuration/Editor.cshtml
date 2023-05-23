@@ -81,13 +81,13 @@
             <h2 class="saveIcon" title="Save" onclick="saveTemplate()">✓</h2>
             <select 
                 asp-items="Model.FileNames"  
-                asp-for="@Model.selectedFileName"
+                asp-for="@Model.SelectedFileName"
                 id="templateName" 
                 onchange="onSelectionChanged(this.value)" 
                 class="dropDownList"></select>
         </div>
 
-        <textarea class="editor" id="templateEditor">@Model.templateJson</textarea>
+        <textarea class="editor" id="templateEditor">@Model.TemplateJson</textarea>
     </div>
 
     <div class="box box2">
@@ -98,7 +98,7 @@
 
         </div>
 
-        <textarea class="editor" id ="masterEditor">@Model.masterJson</textarea>
+        <textarea class="editor" id ="masterEditor">@Model.MasterJson</textarea>
     </div>
 
     <div class="box box3">
@@ -108,7 +108,7 @@
 
         </div>
 
-        <textarea class="editor" id="defaultsEditor">@Model.defaultJson</textarea>
+        <textarea class="editor" id="defaultsEditor">@Model.DefaultJson</textarea>
     </div>
 
     <div class="box box4">
@@ -117,7 +117,7 @@
 
         </div>
 
-        <textarea class="editor" readonly="readonly">@Model.configJson</textarea>
+        <textarea class="editor" readonly="readonly">@Model.ConfigJson</textarea>
     </div>
 </div>
 

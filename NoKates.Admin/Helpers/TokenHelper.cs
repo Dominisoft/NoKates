@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using Blazored.LocalStorage;
 
 namespace NoKates.Admin.Helpers
 {
@@ -22,6 +23,11 @@ namespace NoKates.Admin.Helpers
 
 
             return false;
+        }
+
+        public static async Task<string> GetToken(this ILocalStorageService storage)
+        {
+            return await storage.GetItemAsStringAsync("AuthorizationToken");
         }
     }
 }

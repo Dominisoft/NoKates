@@ -27,7 +27,7 @@ namespace NoKates.WebConsole.Pages.ServiceManagement
             var token = Request.GetToken();
             if (TokenHelper.TokenIsInvalid(token))
             {
-                HttpContext.RedirectToRelativePath("Session/Login");
+                HttpContext.Response.Redirect("Session/Login");
                 return;
             }
             RemoveApp = Request.Query[nameof(RemoveApp)];

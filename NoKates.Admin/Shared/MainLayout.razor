@@ -1,5 +1,7 @@
-﻿@inherits LayoutComponentBase
-
+﻿@using NoKates.Admin.Helpers
+@using Blazored.LocalStorage
+@inherits LayoutComponentBase
+@inject ILocalStorageService Storage;
 <PageTitle>NoKates.Admin</PageTitle>
 
 <div class="page">
@@ -9,11 +11,37 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="/Session/Login" >Login</a>
+
+            @if (LoginValid)
+            {
+                <a href="./Session/Logout">Logout</a>
+            }
+            else
+            {
+                <a href="./Session/Login">Login</a>
+            }
         </div>
 
         <article class="content px-4">
             @Body
         </article>
+        
+
     </main>
 </div>
+@code
+{
+    public static bool LoginValid;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var token = await Storage.GetToken();
+            LoginValid = !TokenHelper.TokenIsInvalid(token);
+
+            StateHasChanged();
+        }
+    }
+
+}

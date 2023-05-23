@@ -2,24 +2,42 @@
 @using NoKates.Common.Infrastructure.Client
 @using NoKates.Common.Infrastructure.Helpers
 @using Blazored.LocalStorage
+@using Blazored.Toast.Services
+@using Blazored.Toast.Configuration
+
 @inject INoKatesCoreClient Client;
-@inject ILocalStorageService storage;
+@inject ILocalStorageService Storage;
+@inject IToastService Toast;
 @code {
 
     public List<string> Services { get; set; }
-    private string token;
-    protected override async Task OnInitializedAsync()
+    private string _token;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await base.OnAfterRenderAsync(firstRender);
+        if (!firstRender) return;
+
+        try
+        {
+            _token = await Storage.GetItemAsStringAsync("AuthorizationToken");
+            HttpHelper.SetToken(_token);
+            var response = Client.GetAllServiceNames(_token);
         
-        token = await storage.GetItemAsStringAsync("AuthorizationToken");
-        HttpHelper.SetToken(token);
-        var response = Client.GetAllServiceNames(token);
-        
-        Services = response.Object.Distinct().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+            Services = response.Object.Distinct().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Toast.ShowError("Error Loading Services");
+        }
+
     }
 }
 
-
+<Authentication/>
+<BlazoredToasts Position="ToastPosition.BottomRight"
+                Timeout="10"
+                ShowProgressBar="true"/>
 <div class="text-center" style="display:inline;">
     <h4>Services</h4>
     <div name="ColorKey" style="display:flex;background-color:black;">
@@ -32,10 +50,11 @@
     <div style="display: inline;">
         @foreach (var service in Services??new List<string>())
         {
-            <ServiceStatusCard Name="@service" authToken="@token" />
+            <ServiceStatusCard Name="@service" AuthToken="@_token" />
         }
     </div>
 
     <a href="./Services/AppManagement"> Add or Remove</a>
+
 </div>
 

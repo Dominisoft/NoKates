@@ -9,6 +9,7 @@ using NoKates.Common.Models;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Web.Administration;
+using NoKates.Common.Infrastructure.Configuration;
 
 namespace NoKates.Common.Infrastructure.Helpers
 {
@@ -16,9 +17,21 @@ namespace NoKates.Common.Infrastructure.Helpers
     {
         private const string UnknownName = "Unknown Service";
         private static string _appName;
+        private static string _appPoolName;
+        private static string AppPoolName => _appPoolName ?? SetAppPoolName();
 
-        private static string AppPoolName =>
-            System.Environment.GetEnvironmentVariable("APP_POOL_ID", EnvironmentVariableTarget.Process);
+        private static string SetAppPoolName()
+        {
+            try
+            {
+                _appPoolName = System.Environment.GetEnvironmentVariable("APP_POOL_ID", EnvironmentVariableTarget.Process);
+            }
+            catch (Exception e)
+            {
+            }
+            return _appPoolName;
+        }
+
         public static string GetAppName()
         {
             if (!string.IsNullOrWhiteSpace(AppPoolName))
@@ -180,13 +193,23 @@ namespace NoKates.Common.Infrastructure.Helpers
         }
         public static string GetRootUri()
         {
-            var serverManager = new ServerManager();
-            var sites = serverManager.Sites;
-            var maxCount = sites.Select(s => s.Applications.Count).Max();
-            var site = sites.FirstOrDefault(s => s.Applications.Count == maxCount);
-            if (site == null) return string.Empty;
-            var binding = site.Bindings.FirstOrDefault();
-            return binding != null ? $@"{binding.Protocol}://{binding.Host}/" : string.Empty;
+            try
+            {
+                var serverManager = new ServerManager();
+                var sites = serverManager.Sites;
+                var maxCount = sites.Select(s => s.Applications.Count).Max();
+                var site = sites.FirstOrDefault(s => s.Applications.Count == maxCount);
+                if (site == null) return string.Empty;
+                var binding = site.Bindings.FirstOrDefault();
+                return binding != null ? $@"{binding.Protocol}://{binding.Host}/" : string.Empty;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return ConfigurationValues.DefaultBaseUrl;
+
 
         }
         public static string GetAppUri()

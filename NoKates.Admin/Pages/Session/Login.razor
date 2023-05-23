@@ -1,26 +1,39 @@
 ﻿@page "/Session/Login"
 @using NoKates.Identity.Common.Clients
 @using Blazored.LocalStorage
+@using Microsoft.AspNetCore.WebUtilities
 @using NoKates.Admin.Helpers
-@inject IAuthenticationClient client;
+@inject IAuthenticationClient Client;
 @inject NavigationManager NavManager;
-@inject ILocalStorageService storage;
+@inject ILocalStorageService Storage;
 @code {
     public string Username { get; set; }
     public string Password { get; set; }
     public string Message { get; set; }
 
+    [Parameter]
+    public string ReturnUrl { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl", out var returnUrl))
+        {
+            ReturnUrl = returnUrl;
+        }
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
         if (!firstRender) return;
-        var contains = await storage.ContainKeyAsync("AuthorizationToken");
+        var token = await Storage.GetToken();
+
+        var contains = !string.IsNullOrWhiteSpace(token);
         if (contains)
         {
-            var token = await storage.GetItemAsStringAsync("AuthorizationToken");
             if (TokenHelper.TokenIsInvalid(token))
-                await storage.RemoveItemAsync("AuthorizationToken");
+                await Storage.RemoveItemAsync("AuthorizationToken");
             else
                 Message = "You are already logged in";
         }
@@ -28,17 +41,23 @@
 
     public async Task ProcessLogin()
     {
-        var response = client.Authenticate(Username, Password);
+        var response = Client.Authenticate(Username, Password);
         if (response.IsError)
             Message = $"Error - {response.Message}";
         else
         {
             var token = response.Object;
             Message = "Success";
-            await storage.SetItemAsStringAsync("AuthorizationToken", token);
-            NavManager.NavigateTo($"");
+            await Storage.SetItemAsStringAsync("AuthorizationToken", token);
+            
+            MainLayout.LoginValid = true;
+            StateHasChanged();
+            if (string.IsNullOrWhiteSpace(ReturnUrl))
+                NavManager.NavigateTo($"");
+            else
+                NavManager.NavigateTo(ReturnUrl);
         }
-        
+
 
     }
 }
@@ -75,7 +94,7 @@
             </form>
         </section>
         <button @onclick="ProcessLogin">Log in</button>
-        @if (@Message?.StartsWith("Error")??false)
+        @if (@Message?.StartsWith("Error") ?? false)
         {
             <h3 style="color: red">@Message</h3>
         }

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Blazored.LocalStorage;
+using Blazored.Toast;
 using NoKates.Admin;
 using NoKates.Admin.Clients;
 using NoKates.Common.Infrastructure.Client;
@@ -27,16 +28,18 @@ builder.Services.AddBlazoredLocalStorage(config => {
         config.JsonSerializerOptions.WriteIndented = false;
     }
 );
+builder.Services.AddBlazoredToast();
 
 AppHelper.SetAppName("Management");
 
 builder.Services.AddNoKates();
+GlobalConfiguration.LoadValuesFromNokates();
 var baseUrl = GlobalConfiguration.BaseUrl;
 builder.Services.AddSingleton<INoKatesCoreClient>(new NoKatesCoreClient(GlobalConfiguration.BaseUrl));
 builder.Services.AddSingleton<IMetricsClient>(new MetricsClient(GlobalConfiguration.LogsAndMetricsServiceUrl));
 builder.Services.AddSingleton<IAuthenticationClient>(new AuthenticationClient(GlobalConfiguration.IdentityServiceUrl));
 builder.Services.AddSingleton<IConfigurationClient>(new ConfigurationClient(GlobalConfiguration.ConfigurationServiceUrl));
-builder.Services.AddSingleton<IWebHostManagementClient>(new WebHostManagementClient($"{baseUrl}/Management"));
+builder.Services.AddSingleton<IWebHostManagementClient>(new WebHostManagementClient($"{baseUrl}/{AppHelper.GetAppName()}"));
 builder.Services.AddTransient<IServiceStatusClient>((x) => new ServiceStatusClient(baseUrl, ""));
 //var mock = new Mock<INoKatesCoreClient>();
 
@@ -72,7 +75,7 @@ app.UseRouting();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
+app.UseNoKates();
 
 
 app.Run();

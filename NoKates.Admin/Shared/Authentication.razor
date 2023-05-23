@@ -1,0 +1,15 @@
+﻿@using Blazored.LocalStorage
+@using NoKates.Admin.Helpers
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService Storage;
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (!firstRender) return;
+        var token = await Storage.GetToken();
+        if (TokenHelper.TokenIsInvalid(token))
+            NavigationManager.NavigateTo($"session/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
+    }
+
+}
