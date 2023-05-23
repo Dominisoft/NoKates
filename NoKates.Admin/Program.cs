@@ -1,7 +1,10 @@
 using System.Text.Json;
 using Blazored.LocalStorage;
+using NoKates.Admin;
 using NoKates.Admin.Clients;
 using NoKates.Common.Infrastructure.Client;
+using NoKates.Common.Infrastructure.Extensions;
+using NoKates.Common.Infrastructure.Helpers;
 using NoKates.Identity.Common.Clients;
 using NoKates.LogsAndMetrics.Common;
 using AuthenticationClient = NoKates.Identity.Common.Clients.AuthenticationClient;
@@ -25,18 +28,15 @@ builder.Services.AddBlazoredLocalStorage(config => {
     }
 );
 
-var baseUrl = "http://LocalServiceHost";
-var core = new NoKatesCoreClient($"{baseUrl}");
-var metrics = new MetricsClient($"{baseUrl}/NoKates.LogsAndMetrics");
-var identity = new AuthenticationClient($"{baseUrl}/NoKates.Identity");
-var config = new ConfigurationClient($"{baseUrl}/NoKates.Configuration");
-var webclient = new WebHostManagementClient($"{baseUrl}/Management");
-var statusClient = new WebHostManagementClient($"{baseUrl}/Management");
-builder.Services.AddSingleton<INoKatesCoreClient>(core);
-builder.Services.AddSingleton<IMetricsClient>(metrics);
-builder.Services.AddSingleton<IAuthenticationClient>(identity);
-builder.Services.AddSingleton<IConfigurationClient>(config);
-builder.Services.AddSingleton<IWebHostManagementClient>(webclient);
+AppHelper.SetAppName("Management");
+
+builder.Services.AddNoKates();
+var baseUrl = GlobalConfiguration.BaseUrl;
+builder.Services.AddSingleton<INoKatesCoreClient>(new NoKatesCoreClient(GlobalConfiguration.BaseUrl));
+builder.Services.AddSingleton<IMetricsClient>(new MetricsClient(GlobalConfiguration.LogsAndMetricsServiceUrl));
+builder.Services.AddSingleton<IAuthenticationClient>(new AuthenticationClient(GlobalConfiguration.IdentityServiceUrl));
+builder.Services.AddSingleton<IConfigurationClient>(new ConfigurationClient(GlobalConfiguration.ConfigurationServiceUrl));
+builder.Services.AddSingleton<IWebHostManagementClient>(new WebHostManagementClient($"{baseUrl}/Management"));
 builder.Services.AddTransient<IServiceStatusClient>((x) => new ServiceStatusClient(baseUrl, ""));
 //var mock = new Mock<INoKatesCoreClient>();
 

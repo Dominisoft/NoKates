@@ -37,6 +37,9 @@ namespace NoKates.Common.Infrastructure.Helpers
 
             return _appName;
         }
+
+        public static void SetAppName(string appName)
+            => _appName = appName;
         public static List<EndpointDescription> GetEndpoints(List<EndpointDataSource> endpointSources)
         {
             var appName = GetAppName();
