@@ -83,19 +83,19 @@
                         </div>
                         <div>
                             <a href="Services/@Name/Logs" title="View logs" style="padding: 3px;">
-                                <span class="iconify" data-icon="oi:file" data-width="50"></span>
+                                <span class="iconify" data-icon="oi:file" data-width="50"><br />View Logs</span>
 
 
                             </a>
 
                             <a href="Services/@Name/Requests" title="View Request logs" style="padding: 3px;">
-                                <span class="iconify" data-icon="oi:globe" data-width="50"></span>
+                                <span class="iconify" data-icon="oi:globe" data-width="50"><br />View Requests</span>
 
 
                             </a>
 
                             <a href="Services/EndpointStatusList?ServiceName=@Name" title="View Metrics" style="padding: 3px;">
-                                <span class="iconify" data-icon="oi:bar-chart" data-width="50"></span>
+                                <span class="iconify" data-icon="oi:bar-chart" data-width="50"><br />View Metrics</span>
                             </a>
 
 
@@ -105,14 +105,14 @@
                             @if (PoolState?.State == ObjectState.Started)
                             {
                                 <a href="./StatusList?function=StopAppPool&name=@Name" title="Stop" style="padding: 3px;">
-                                    <span class="iconify" data-icon="oi:media-stop" data-width="50"></span>
+                                    <span class="iconify" data-icon="oi:media-stop" data-width="50"><br />Stop</span>
                                 </a>
 
                             }
                             else
                             {
                                 <a href="./StatusList?function=StartAppPool&name=@Name" title="Start" style="padding: 3px;">
-                                    <span class="iconify" data-icon="oi:media-play" data-width="50"></span>
+                                    <span class="iconify" data-icon="oi:media-play" data-width="50"><br/>Start</span>
                                 </a>
                             }
 

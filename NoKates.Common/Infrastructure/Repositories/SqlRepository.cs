@@ -1,5 +1,6 @@
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NoKates.Common.Infrastructure.Extensions;
 using NoKates.Common.Infrastructure.RepositoryConnections;
@@ -20,6 +21,8 @@ namespace NoKates.Common.Infrastructure.Repositories
         bool Delete(TEntity entity);
 
     }
+
+    [ExcludeFromCodeCoverage]
     public class SqlRepository<TEntity>: BaseRepository<TEntity,SqlConnection>, ISqlRepository<TEntity> where TEntity : Entity, new()
     {
         private readonly string _tableName;
